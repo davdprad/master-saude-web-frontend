@@ -1,34 +1,24 @@
-"use client";
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
 import { Role } from "@/src/types/role";
 import { sidebarConfig } from "@/src/config/sidebar.config";
 import Image from "next/image";
 import LogoMaster from "@/public/logo-master.svg";
+import NavButton from "../ui/NavButton";
 
 interface SidebarProps {
-  role: Role;
+  userRole: Role;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export default function Sidebar({ role }: SidebarProps) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const navItems = sidebarConfig[role];
+export default function Sidebar({ userRole, isOpen, onClose }: SidebarProps) {
+  const navItems = sidebarConfig[userRole];
 
   return (
     <>
-      {/* Botão mobile - aparece apenas em telas pequenas */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-700 transition"
-      >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-
       {/* Overlay para mobile */}
       {isOpen && (
         <div
-          onClick={() => setIsOpen(false)}
+          onClick={onClose}
           className="lg:hidden fixed inset-0 bg-black/50 z-30"
         />
       )}
@@ -54,19 +44,13 @@ export default function Sidebar({ role }: SidebarProps) {
         {/* Navigation */}
         <nav className="p-4 space-y-2">
           {navItems.map((item, index) => {
-            const Icon = item.icon;
             return (
-              <a
+              <NavButton
                 key={index}
                 href={item.href}
-                className="flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-all group"
-              >
-                <Icon
-                  size={20}
-                  className="group-hover:scale-110 transition-transform"
-                />
-                <span className="font-medium">{item.label}</span>
-              </a>
+                icon={item.icon}
+                label={item.label}
+              />
             );
           })}
         </nav>
