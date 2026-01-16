@@ -15,29 +15,28 @@ export default function DashboardPage() {
       icon: Clock,
       number: 4,
       label: "Pacientes em Espera",
-      gradient: "from-blue-500 to-indigo-600",
+      color: "blue-500",
       bgLight: "bg-blue-50",
     },
     {
       icon: FileX,
       number: 23,
       label: "Exames Vencidos",
-      gradient: "from-red-500 to-pink-600",
+      color: "red-500",
       bgLight: "bg-red-50",
-      danger: true,
     },
     {
       icon: Users,
       number: 150,
       label: "Total Colaboradores",
-      gradient: "from-green-500 to-emerald-600",
+      color: "green-500",
       bgLight: "bg-green-50",
     },
     {
       icon: Building,
       number: 39,
       label: "Empresas Ativas",
-      gradient: "from-purple-500 to-indigo-600",
+      color: "purple-500",
       bgLight: "bg-purple-50",
     },
   ];
@@ -75,9 +74,10 @@ export default function DashboardPage() {
     { id: 2, name: "Fernanda Rochuino", exam: "Audiometria", days: 5 },
     { id: 3, name: "Pedro Almeida", exam: "Visão", days: 7 },
   ];
+
   return (
     <div className="space-y-6 animate-in fade-in">
-      <StatsGrid stats={statsCards} />
+      <StatsGrid stats={statsCards} cols={statsCards.length} />
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <WaitingPatientsCard patients={waitingPatients} />

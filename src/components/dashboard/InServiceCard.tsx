@@ -1,4 +1,5 @@
 import { CheckCircle, UserCircle2 } from "lucide-react";
+import { Button } from "../ui/Button";
 
 interface Patient {
   id: number;
@@ -46,10 +47,10 @@ export function InServiceCard({ patients }: Props) {
                 </div>
               </div>
             </div>
-            <button className="w-full sm:w-auto px-4 py-2 border-2 border-green-600 text-green-600 rounded-xl hover:bg-green-50 transition-all duration-300 font-semibold text-sm hover:scale-105 flex items-center justify-center gap-2">
-              <CheckCircle size={16} />
-              Finalizar
-            </button>
+            <Button
+              label="Atender"
+              className="w-full sm:w-auto px-4 md:px-6 py-2 bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 font-semibold hover:text-white text-sm shadow-md hover:shadow-lg"
+            />
           </div>
         ))}
       </div>

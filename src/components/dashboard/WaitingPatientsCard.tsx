@@ -1,5 +1,6 @@
 // components/dashboard/WaitingPatientsCard.tsx
 import { ArrowRight, UserCircle2 } from "lucide-react";
+import { Button } from "../ui/Button";
 
 interface Patient {
   id: number;
@@ -24,11 +25,11 @@ export function WaitingPatientsCard({ patients }: Props) {
             {patients.length} pacientes aguardando
           </p>
         </div>
-        <button className="flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 bg-linear-to-r from-indigo-600 to-blue-600 text-white rounded-xl hover:from-indigo-700 hover:to-blue-700 transition-all duration-300 font-semibold text-sm shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 hover:scale-105">
-          <ArrowRight size={18} />
-          <span className="hidden sm:inline">Gerenciar Fila</span>
-          <span className="sm:hidden">Gerenciar</span>
-        </button>
+        <Button
+          icon={ArrowRight}
+          label="Gerenciar"
+          className="w-full sm:w-auto px-4 md:px-6 py-2 bg-linear-to-r from-indigo-600 to-blue-600 text-white rounded-xl hover:from-indigo-700 hover:to-blue-700 transition-all duration-300 font-semibold hover:text-white text-sm shadow-md hover:shadow-lg"
+        />
       </div>
 
       <div className="flex-1 overflow-auto">
@@ -58,9 +59,10 @@ export function WaitingPatientsCard({ patients }: Props) {
                 </div>
               </div>
             </div>
-            <button className="w-full sm:w-auto px-4 md:px-6 py-2 bg-linear-to-r from-indigo-600 to-blue-600 text-white rounded-xl hover:from-indigo-700 hover:to-blue-700 transition-all duration-300 font-semibold text-sm shadow-md hover:shadow-lg hover:scale-105">
-              Atender
-            </button>
+            <Button
+              label="Atender"
+              className="w-full sm:w-auto px-4 md:px-6 py-2 bg-linear-to-r from-indigo-600 to-blue-600 text-white rounded-xl hover:from-indigo-700 hover:to-blue-700 transition-all duration-300 font-semibold hover:text-white text-sm shadow-md hover:shadow-lg"
+            />
           </div>
         ))}
       </div>

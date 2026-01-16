@@ -1,4 +1,5 @@
 import { FileText } from "lucide-react";
+import { Button } from "../ui/Button";
 
 interface Exam {
   id: number;
@@ -18,9 +19,10 @@ export function ExpiringExamsCard({ exams }: Props) {
         <h2 className="text-lg md:text-xl font-bold text-gray-900">
           Exames Vencendo
         </h2>
-        <button className="px-3 md:px-4 py-2 border-2 border-amber-600 text-amber-600 rounded-xl hover:bg-amber-50 transition-all duration-300 font-semibold text-sm hover:scale-105">
-          Ver Todos
-        </button>
+        <Button
+          label="Ver todos"
+          className="w-full sm:w-auto px-4 md:px-6 py-2 bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-300 font-semibold hover:text-white text-sm shadow-md hover:shadow-lg"
+        />
       </div>
 
       <div className="max-h-64 overflow-auto">
@@ -42,9 +44,10 @@ export function ExpiringExamsCard({ exams }: Props) {
                 </div>
               </div>
             </div>
-            <button className="w-full sm:w-auto px-4 py-2 bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-300 font-semibold text-sm shadow-md hover:shadow-lg hover:scale-105">
-              Agendar
-            </button>
+            <Button
+              label="Agendar"
+              className="w-full sm:w-auto px-4 md:px-6 py-2 bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-300 font-semibold hover:text-white text-sm shadow-md hover:shadow-lg"
+            />
           </div>
         ))}
       </div>

@@ -22,7 +22,7 @@ export function Button({
         hover:bg-indigo-50 hover:text-indigo-600
         transition-all group
         disabled:opacity-50 disabled:cursor-not-allowed
-        cursor-pointer
+        cursor-pointer hover:scale-102
         ${className}
       `}
     >
