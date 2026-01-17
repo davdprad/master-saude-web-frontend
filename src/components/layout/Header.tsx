@@ -1,14 +1,19 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import NotificationsDropdown from "../notifications/NotificationsDropdown";
 import UserDropdown from "./UserDropdown";
 import { Menu } from "lucide-react";
+import getPageTitle from "@/src/utils/getPageTitle";
 
 interface HeaderProps {
   onSidebarClick: () => void;
 }
 
 export default function Header({ onSidebarClick }: HeaderProps) {
+  const pathname = usePathname();
+  const title = getPageTitle(pathname);
+
   return (
     <header className="bg-white border-b border-gray-200 shadow-sm">
       <div className="flex items-center justify-between px-6 py-4">
@@ -24,7 +29,7 @@ export default function Header({ onSidebarClick }: HeaderProps) {
           </button>
 
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">Dashboard</h2>
+            <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
             <p className="text-sm text-gray-500 hidden sm:block">
               Bem-vindo de volta!
             </p>
