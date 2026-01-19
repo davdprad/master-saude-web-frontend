@@ -5,6 +5,7 @@ import CompaniesTable from "@/src/components/tables/CompaniesTable";
 import { Button } from "@/src/components/ui/Button";
 import InputSearch from "@/src/components/ui/InputSearch";
 import SearchableSelect from "@/src/components/ui/SearchableSelect";
+import { Company } from "@/src/types/company";
 import {
   Building,
   CheckCircle,
@@ -13,7 +14,7 @@ import {
   Plus,
   Search,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function CompaniesPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -106,6 +107,30 @@ export default function CompaniesPage() {
     { label: "Inativos", value: "inativos" },
   ];
 
+  const filteredCompanies = useMemo(() => {
+    const term = searchTerm.toLowerCase().trim();
+
+    // mapeia o select para o tipo real do campo status
+    const statusFilter: Company["status"] | null =
+      selectedStatus === "ativos"
+        ? "ativo"
+        : selectedStatus === "inativos"
+        ? "inativo"
+        : null; // "" ou "all" => sem filtro
+
+    return companies.filter((company) => {
+      const matchesSearch =
+        !term ||
+        [company.name, company.cnpj, company.email].some((field) =>
+          field.toLowerCase().includes(term)
+        );
+
+      const matchesStatus = !statusFilter || company.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [companies, searchTerm, selectedStatus]);
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Stats Cards */}
@@ -117,7 +142,7 @@ export default function CompaniesPage() {
         <InputSearch
           value={searchTerm}
           onChange={setSearchTerm}
-          placeholder="Buscar por nome ou CNPJ..."
+          placeholder="Buscar por nome, email ou CNPJ..."
           icon={Search}
         />
 
@@ -131,7 +156,7 @@ export default function CompaniesPage() {
         />
 
         {/* Botão Adicionar */}
-        <Button
+        {/* <Button
           label="Adicionar Empresa"
           icon={Plus}
           className="w-full sm:w-auto px-4 md:px-6
@@ -139,11 +164,11 @@ export default function CompaniesPage() {
                     text-white rounded-xl hover:from-green-600 hover:to-emerald-600
                     transition-all duration-300 font-semibold hover:text-white
                     text-sm shadow-md hover:shadow-lg"
-        />
+        /> */}
       </div>
 
       {/* Tabela de colaboradores */}
-      <CompaniesTable companies={companies} />
+      <CompaniesTable companies={filteredCompanies} />
     </div>
   );
 }

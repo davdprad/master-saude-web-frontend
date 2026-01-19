@@ -1,25 +1,30 @@
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "../ui/Button";
-
-interface Company {
-  id: number;
-  name: string;
-  cnpj: string;
-  email: string;
-  phone: string;
-  employees: number;
-  status: string;
-}
-
-interface EmployeesTableProps {
-  companies: Company[];
-  action?: () => void;
-}
+import { useEffect, useMemo, useState } from "react";
+import { Pagination } from "../ui/Pagination";
+import { CompaniesTableProps } from "@/src/types/company";
 
 export default function CompaniesTable({
   companies,
   action,
-}: EmployeesTableProps) {
+  itemsPerPage = 5,
+}: CompaniesTableProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = useMemo(() => {
+    return Math.max(1, Math.ceil(companies.length / itemsPerPage));
+  }, [companies.length, itemsPerPage]);
+
+  useEffect(() => {
+    setCurrentPage((prev) => Math.min(prev, totalPages));
+  }, [totalPages]);
+
+  const paginatedCompanies = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return companies.slice(start, end);
+  }, [companies, currentPage, itemsPerPage]);
+
   return (
     <>
       {/* Tabela de Colaboradores */}
@@ -35,7 +40,7 @@ export default function CompaniesTable({
 
         {/* Lista de Colaboradores */}
         <div className="divide-y divide-gray-100">
-          {companies.map((company) => (
+          {paginatedCompanies.map((company) => (
             <div
               key={company.id}
               className="grid grid-cols-1 lg:grid-cols-14 gap-4 p-4 lg:px-6 lg:py-4 hover:bg-linear-to-r hover:from-indigo-50/50 hover:to-transparent transition-all duration-200 group"
@@ -97,6 +102,13 @@ export default function CompaniesTable({
             </div>
           ))}
         </div>
+
+        {/* Paginação */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </>
   );

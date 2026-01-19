@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Search, Plus, Users, UserCheck, UserX, Filter } from "lucide-react";
 import { StatsGrid } from "@/src/components/dashboard";
 import InputSearch from "@/src/components/ui/InputSearch";
 import SearchableSelect from "@/src/components/ui/SearchableSelect";
 import { Button } from "@/src/components/ui/Button";
 import EmployeesTable from "@/src/components/tables/EmployeesTable";
+import { Employee } from "@/src/types/employee";
 
 export default function EmployeesPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,6 +79,86 @@ export default function EmployeesPage() {
       admission: "10/11/2023",
       status: "inativo",
     },
+    {
+      id: 6,
+      name: "Marcos Vinícius Tavares",
+      company: "Empresa Gama",
+      position: "Desenvolvedor Front-end",
+      admission: "05/02/2024",
+      status: "ativo",
+    },
+    {
+      id: 7,
+      name: "Patrícia Alves Nogueira",
+      company: "Empresa Beta",
+      position: "Coordenadora Administrativa",
+      admission: "22/08/2023",
+      status: "ativo",
+    },
+    {
+      id: 8,
+      name: "Ricardo Henrique Lopes",
+      company: "Empresa Alfa",
+      position: "Analista Financeiro",
+      admission: "03/07/2023",
+      status: "ativo",
+    },
+    {
+      id: 9,
+      name: "Juliana Martins Pacheco",
+      company: "Empresa Gama",
+      position: "Product Owner",
+      admission: "18/09/2023",
+      status: "ativo",
+    },
+    {
+      id: 10,
+      name: "Diego Rafael Cunha",
+      company: "Empresa Beta",
+      position: "Suporte de TI",
+      admission: "30/10/2023",
+      status: "inativo",
+    },
+    {
+      id: 11,
+      name: "Larissa Fontes Araujo",
+      company: "Empresa Alfa",
+      position: "Analista de Qualidade",
+      admission: "12/06/2024",
+      status: "ativo",
+    },
+    {
+      id: 12,
+      name: "Bruno Cavalcante Silva",
+      company: "Empresa Gama",
+      position: "DevOps Engineer",
+      admission: "02/04/2024",
+      status: "ativo",
+    },
+    {
+      id: 13,
+      name: "Renata Gomes Figueiredo",
+      company: "Empresa Beta",
+      position: "UX Researcher",
+      admission: "19/05/2024",
+      status: "ativo",
+    },
+    {
+      id: 14,
+      name: "Felipe Augusto Morais",
+      company: "Empresa Alfa",
+      position: "Analista de Dados",
+      admission: "27/02/2024",
+      status: "ativo",
+    },
+    {
+      id: 15,
+      name: "Camila Rodrigues Peixoto",
+      company: "Empresa Gama",
+      position: "Scrum Master",
+      admission: "14/03/2024",
+      status: "ativo",
+    },
   ];
 
   const optionsCompany = [
@@ -92,6 +173,28 @@ export default function EmployeesPage() {
     { label: "Inativos", value: "inativos" },
   ];
 
+  const filteredEmployees = useMemo(() => {
+    const term = searchTerm.toLowerCase().trim();
+
+    // mapeia o select para o tipo real do campo status
+    const statusFilter: Employee["status"] | null =
+      selectedStatus === "ativos"
+        ? "ativo"
+        : selectedStatus === "inativos"
+        ? "inativo"
+        : null; // "" ou "all" => sem filtro
+
+    return employees.filter((employee) => {
+      const matchesSearch =
+        !term ||
+        [employee.name].some((field) => field.toLowerCase().includes(term));
+
+      const matchesStatus = !statusFilter || employee.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [employees, searchTerm, selectedStatus]);
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Stats Cards */}
@@ -103,7 +206,7 @@ export default function EmployeesPage() {
         <InputSearch
           value={searchTerm}
           onChange={setSearchTerm}
-          placeholder="Buscar por nome ou CPF..."
+          placeholder="Buscar por nome..."
           icon={Search}
         />
 
@@ -126,7 +229,7 @@ export default function EmployeesPage() {
         />
 
         {/* Botão Adicionar */}
-        <Button
+        {/* <Button
           label="Adicionar Colaborador"
           icon={Plus}
           className="w-full sm:w-auto px-4 md:px-6
@@ -134,11 +237,11 @@ export default function EmployeesPage() {
                     text-white rounded-xl hover:from-green-600 hover:to-emerald-600
                     transition-all duration-300 font-semibold hover:text-white
                     text-sm shadow-md hover:shadow-lg"
-        />
+        /> */}
       </div>
 
       {/* Tabela de colaboradores */}
-      <EmployeesTable employees={employees} />
+      <EmployeesTable employees={filteredEmployees} itemsPerPage={5} />
     </div>
   );
 }

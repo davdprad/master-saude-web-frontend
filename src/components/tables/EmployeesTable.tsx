@@ -1,24 +1,30 @@
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "../ui/Button";
-
-interface Employee {
-  id: number;
-  name: string;
-  company: string;
-  position: string;
-  admission: string;
-  status: string;
-}
-
-interface EmployeesTableProps {
-  employees: Employee[];
-  action?: () => void;
-}
+import { Pagination } from "../ui/Pagination";
+import { useEffect, useMemo, useState } from "react";
+import { EmployeesTableProps } from "@/src/types/employee";
 
 export default function EmployeesTable({
   employees,
   action,
+  itemsPerPage = 5,
 }: EmployeesTableProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = useMemo(() => {
+    return Math.max(1, Math.ceil(employees.length / itemsPerPage));
+  }, [employees.length, itemsPerPage]);
+
+  useEffect(() => {
+    setCurrentPage((prev) => Math.min(prev, totalPages));
+  }, [totalPages]);
+
+  const paginatedEmployees = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return employees.slice(start, end);
+  }, [employees, currentPage, itemsPerPage]);
+
   return (
     <>
       {/* Tabela de Colaboradores */}
@@ -35,7 +41,7 @@ export default function EmployeesTable({
 
         {/* Lista de Colaboradores */}
         <div className="divide-y divide-gray-100">
-          {employees.map((employee) => (
+          {paginatedEmployees.map((employee) => (
             <div
               key={employee.id}
               className="grid grid-cols-1 lg:grid-cols-14 gap-4 p-4 lg:px-6 lg:py-4 hover:bg-linear-to-r hover:from-indigo-50/50 hover:to-transparent transition-all duration-200 group"
@@ -108,6 +114,13 @@ export default function EmployeesTable({
             </div>
           ))}
         </div>
+
+        {/* Paginação */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </>
   );
