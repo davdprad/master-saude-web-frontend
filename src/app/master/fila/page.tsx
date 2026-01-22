@@ -21,6 +21,7 @@ import { StatsGrid } from "@/src/components/dashboard";
 import { Button } from "@/src/components/ui/Button";
 import InputSearch from "@/src/components/ui/InputSearch";
 import SearchableSelect from "@/src/components/ui/SearchableSelect";
+import { getCols } from "@/src/utils/gridUtils";
 
 /**
  * ✅ TELA: Gerenciamento de Fila de Espera
@@ -164,28 +165,28 @@ export default function QueueManagementPage() {
         icon: Clock,
         number: waiting,
         label: "Aguardando",
-        color: "blue-500",
+        color: "text-blue-500",
         bgLight: "bg-blue-50",
       },
       {
         icon: CheckCircle2,
         number: called,
         label: "Chamados",
-        color: "yellow-500",
+        color: "text-yellow-500",
         bgLight: "bg-yellow-50",
       },
       {
         icon: Users,
         number: inService,
         label: "Em Atendimento",
-        color: "green-500",
+        color: "text-green-500",
         bgLight: "bg-green-50",
       },
       {
         icon: XCircle,
         number: total,
         label: "Total na Fila",
-        color: "purple-500",
+        color: "text-purple-500",
         bgLight: "bg-purple-50",
       },
     ];
@@ -197,7 +198,7 @@ export default function QueueManagementPage() {
   return (
     <div className="space-y-6 animate-in fade-in">
       {/* Cards topo (mesmo estilo do Dashboard) */}
-      <StatsGrid stats={statsCards} cols={statsCards.length} />
+      <StatsGrid stats={statsCards} cols={getCols(statsCards.length)} />
 
       {/* Barra de filtros (mesmo estilo da sua tela de empresas) */}
       <div className="flex flex-col lg:flex-row gap-4">

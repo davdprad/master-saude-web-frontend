@@ -21,12 +21,12 @@ export function StatsCard({
             className={`w-12 h-12 ${bgLight} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
           >
             <Icon
-              className={`w-6 h-6 bg-linear-to-br text-${color} bg-clip-text `}
+              className={`w-6 h-6 bg-linear-to-br ${color} bg-clip-text `}
               strokeWidth={2.5}
             />
           </div>
 
-          <div className={`text-3xl md:text-4xl font-bold mb-2 text-${color}`}>
+          <div className={`text-3xl md:text-4xl font-bold mb-2 ${color}`}>
             {number}
           </div>
         </div>

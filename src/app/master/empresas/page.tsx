@@ -6,6 +6,7 @@ import { Button } from "@/src/components/ui/Button";
 import InputSearch from "@/src/components/ui/InputSearch";
 import SearchableSelect from "@/src/components/ui/SearchableSelect";
 import { Company } from "@/src/types/company";
+import { getCols } from "@/src/utils/gridUtils";
 import {
   Building,
   CheckCircle,
@@ -25,21 +26,21 @@ export default function CompaniesPage() {
       icon: Building,
       number: 150,
       label: "Total de Empresas",
-      color: "blue-500",
+      color: "text-blue-500",
       bgLight: "bg-blue-50",
     },
     {
       icon: CheckCircle,
       number: 145,
       label: "Empresas Ativas",
-      color: "green-500",
+      color: "text-green-500",
       bgLight: "bg-green-50",
     },
     {
       icon: XCircle,
       number: 5,
       label: "Empresas Inativas",
-      color: "red-500",
+      color: "text-red-500",
       bgLight: "bg-red-50",
     },
   ];
@@ -134,7 +135,7 @@ export default function CompaniesPage() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Stats Cards */}
-      <StatsGrid stats={statsCards} cols={statsCards.length} />
+      <StatsGrid stats={statsCards} cols={getCols(statsCards.length)} />
 
       {/* Barra de Filtros */}
       <div className="flex flex-col lg:flex-row gap-4">

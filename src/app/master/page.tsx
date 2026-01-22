@@ -8,6 +8,7 @@ import {
   InServiceCard,
   ExpiringExamsCard,
 } from "@/src/components/dashboard";
+import { getCols } from "@/src/utils/gridUtils";
 
 export default function DashboardPage() {
   const statsCards = [
@@ -15,28 +16,28 @@ export default function DashboardPage() {
       icon: Clock,
       number: 4,
       label: "Pacientes em Espera",
-      color: "blue-500",
+      color: "text-blue-500",
       bgLight: "bg-blue-50",
     },
     {
       icon: FileX,
       number: 23,
       label: "Exames Vencidos",
-      color: "red-500",
+      color: "text-red-500",
       bgLight: "bg-red-50",
     },
     {
       icon: Users,
       number: 150,
       label: "Total Colaboradores",
-      color: "green-500",
+      color: "text-green-500",
       bgLight: "bg-green-50",
     },
     {
       icon: Building,
       number: 39,
       label: "Empresas Ativas",
-      color: "purple-500",
+      color: "text-purple-500",
       bgLight: "bg-purple-50",
     },
   ];
@@ -77,7 +78,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in">
-      <StatsGrid stats={statsCards} cols={statsCards.length} />
+      <StatsGrid stats={statsCards} cols={getCols(statsCards.length)} />
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <WaitingPatientsCard patients={waitingPatients} />

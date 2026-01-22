@@ -8,6 +8,7 @@ import SearchableSelect from "@/src/components/ui/SearchableSelect";
 import { Button } from "@/src/components/ui/Button";
 import EmployeesTable from "@/src/components/tables/EmployeesTable";
 import { Employee } from "@/src/types/employee";
+import { getCols } from "@/src/utils/gridUtils";
 
 export default function EmployeesPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,21 +20,21 @@ export default function EmployeesPage() {
       icon: Users,
       number: 150,
       label: "Total de Colaboradores",
-      color: "blue-500",
+      color: "text-blue-500",
       bgLight: "bg-blue-50",
     },
     {
       icon: UserCheck,
       number: 145,
       label: "Colaboradores Ativos",
-      color: "green-500",
+      color: "text-green-500",
       bgLight: "bg-green-50",
     },
     {
       icon: UserX,
       number: 5,
       label: "Colaboradores Inativos",
-      color: "red-500",
+      color: "text-red-500",
       bgLight: "bg-red-50",
     },
   ];
@@ -198,7 +199,7 @@ export default function EmployeesPage() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Stats Cards */}
-      <StatsGrid stats={statsCards} cols={statsCards.length} />
+      <StatsGrid stats={statsCards} cols={getCols(statsCards.length)} />
 
       {/* Barra de Filtros */}
       <div className="flex flex-col lg:flex-row gap-4">
