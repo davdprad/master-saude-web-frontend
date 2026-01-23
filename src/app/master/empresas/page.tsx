@@ -1,6 +1,6 @@
 "use client";
 
-import { StatsGrid } from "@/src/components/dashboard";
+import { StatsGrid } from "@/src/components/cards";
 import CompaniesTable from "@/src/components/tables/CompaniesTable";
 import { Button } from "@/src/components/ui/Button";
 import InputSearch from "@/src/components/ui/InputSearch";

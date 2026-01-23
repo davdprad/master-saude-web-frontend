@@ -2,12 +2,11 @@
 
 import { useMemo, useState } from "react";
 import { Search, Plus, Users, UserCheck, UserX, Filter } from "lucide-react";
-import { StatsGrid } from "@/src/components/dashboard";
+import { StatsGrid } from "@/src/components/cards";
 import InputSearch from "@/src/components/ui/InputSearch";
 import SearchableSelect from "@/src/components/ui/SearchableSelect";
 import { Button } from "@/src/components/ui/Button";
 import EmployeesTable from "@/src/components/tables/EmployeesTable";
-import { Employee } from "@/src/types/employee";
 import { getCols } from "@/src/utils/gridUtils";
 
 export default function EmployeesPage() {
@@ -44,6 +43,7 @@ export default function EmployeesPage() {
       id: 1,
       name: "Ana Cristina Souza",
       company: "Empresa Alfa",
+      companyId: "1",
       position: "Engenheira de Produção",
       admission: "20/03/2024",
       status: "ativo",
@@ -52,6 +52,7 @@ export default function EmployeesPage() {
       id: 2,
       name: "João Paulo Mendes",
       company: "Empresa Alfa",
+      companyId: "1",
       position: "Técnico de Segurança",
       admission: "15/01/2024",
       status: "ativo",
@@ -60,6 +61,7 @@ export default function EmployeesPage() {
       id: 3,
       name: "Fernanda Rocha Lima",
       company: "Empresa Beta",
+      companyId: "2",
       position: "Analista de RH",
       admission: "15/01/2024",
       status: "ativo",
@@ -68,6 +70,7 @@ export default function EmployeesPage() {
       id: 4,
       name: "Fernanda Rochuino",
       company: "Empresa Beta",
+      companyId: "2",
       position: "Designer Gráfico",
       admission: "11/12/2023",
       status: "ativo",
@@ -76,6 +79,7 @@ export default function EmployeesPage() {
       id: 5,
       name: "Carlos B Eduardo Brito",
       company: "Empresa Alfa",
+      companyId: "1",
       position: "Sprinter de Logística",
       admission: "10/11/2023",
       status: "inativo",
@@ -84,6 +88,7 @@ export default function EmployeesPage() {
       id: 6,
       name: "Marcos Vinícius Tavares",
       company: "Empresa Gama",
+      companyId: "3",
       position: "Desenvolvedor Front-end",
       admission: "05/02/2024",
       status: "ativo",
@@ -92,6 +97,7 @@ export default function EmployeesPage() {
       id: 7,
       name: "Patrícia Alves Nogueira",
       company: "Empresa Beta",
+      companyId: "2",
       position: "Coordenadora Administrativa",
       admission: "22/08/2023",
       status: "ativo",
@@ -100,6 +106,7 @@ export default function EmployeesPage() {
       id: 8,
       name: "Ricardo Henrique Lopes",
       company: "Empresa Alfa",
+      companyId: "1",
       position: "Analista Financeiro",
       admission: "03/07/2023",
       status: "ativo",
@@ -108,6 +115,7 @@ export default function EmployeesPage() {
       id: 9,
       name: "Juliana Martins Pacheco",
       company: "Empresa Gama",
+      companyId: "3",
       position: "Product Owner",
       admission: "18/09/2023",
       status: "ativo",
@@ -116,6 +124,7 @@ export default function EmployeesPage() {
       id: 10,
       name: "Diego Rafael Cunha",
       company: "Empresa Beta",
+      companyId: "2",
       position: "Suporte de TI",
       admission: "30/10/2023",
       status: "inativo",
@@ -124,6 +133,7 @@ export default function EmployeesPage() {
       id: 11,
       name: "Larissa Fontes Araujo",
       company: "Empresa Alfa",
+      companyId: "1",
       position: "Analista de Qualidade",
       admission: "12/06/2024",
       status: "ativo",
@@ -132,6 +142,7 @@ export default function EmployeesPage() {
       id: 12,
       name: "Bruno Cavalcante Silva",
       company: "Empresa Gama",
+      companyId: "3",
       position: "DevOps Engineer",
       admission: "02/04/2024",
       status: "ativo",
@@ -140,6 +151,7 @@ export default function EmployeesPage() {
       id: 13,
       name: "Renata Gomes Figueiredo",
       company: "Empresa Beta",
+      companyId: "2",
       position: "UX Researcher",
       admission: "19/05/2024",
       status: "ativo",
@@ -148,6 +160,7 @@ export default function EmployeesPage() {
       id: 14,
       name: "Felipe Augusto Morais",
       company: "Empresa Alfa",
+      companyId: "1",
       position: "Analista de Dados",
       admission: "27/02/2024",
       status: "ativo",
@@ -156,6 +169,7 @@ export default function EmployeesPage() {
       id: 15,
       name: "Camila Rodrigues Peixoto",
       company: "Empresa Gama",
+      companyId: "3",
       position: "Scrum Master",
       admission: "14/03/2024",
       status: "ativo",
@@ -163,38 +177,34 @@ export default function EmployeesPage() {
   ];
 
   const optionsCompany = [
-    { label: "Todas as empresas", value: "all" },
-    { label: "Empresa Alfa", value: "alfa" },
-    { label: "Empresa Beta", value: "beta" },
+    { label: "Todas as empresas", value: "" },
+    { label: "Empresa Alfa", value: "1" },
+    { label: "Empresa Beta", value: "2" },
+    { label: "Empresa Gama", value: "3" },
   ];
 
   const optionsStatus = [
-    { label: "Todos os status", value: "all" },
-    { label: "Ativos", value: "ativos" },
-    { label: "Inativos", value: "inativos" },
+    { label: "Todos os status", value: "" },
+    { label: "Ativos", value: "ativo" },
+    { label: "Inativos", value: "inativo" },
   ];
 
   const filteredEmployees = useMemo(() => {
     const term = searchTerm.toLowerCase().trim();
-
-    // mapeia o select para o tipo real do campo status
-    const statusFilter: Employee["status"] | null =
-      selectedStatus === "ativos"
-        ? "ativo"
-        : selectedStatus === "inativos"
-        ? "inativo"
-        : null; // "" ou "all" => sem filtro
 
     return employees.filter((employee) => {
       const matchesSearch =
         !term ||
         [employee.name].some((field) => field.toLowerCase().includes(term));
 
-      const matchesStatus = !statusFilter || employee.status === statusFilter;
+      const matchesCompany =
+        !selectedCompany || employee.companyId === selectedCompany;
+      const matchesStatus =
+        !selectedStatus || employee.status === selectedStatus;
 
-      return matchesSearch && matchesStatus;
+      return matchesSearch && matchesCompany && matchesStatus;
     });
-  }, [employees, searchTerm, selectedStatus]);
+  }, [employees, searchTerm, selectedCompany, selectedStatus]);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">

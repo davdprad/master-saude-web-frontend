@@ -7,7 +7,7 @@ import {
   WaitingPatientsCard,
   InServiceCard,
   ExpiringExamsCard,
-} from "@/src/components/dashboard";
+} from "@/src/components/cards";
 import { getCols } from "@/src/utils/gridUtils";
 
 export default function DashboardPage() {

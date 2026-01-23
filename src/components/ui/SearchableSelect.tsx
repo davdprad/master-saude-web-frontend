@@ -44,7 +44,7 @@ export default function SearchableSelect({
   }, []);
 
   return (
-    <div ref={ref} className="relative min-w-[240px]">
+    <div ref={ref} className="relative min-w-60">
       {/* Trigger */}
       <button
         type="button"
@@ -61,11 +61,13 @@ export default function SearchableSelect({
           <Icon
             size={20}
             className={`absolute left-3 top-1/2 -translate-y-1/2 ${
-              selected ? "text-gray-600" : "text-gray-400"
+              selected?.value === "" ? "text-gray-400" : "text-gray-600"
             } group-focus-within:text-indigo-500 transition`}
           />
         )}
-        <span className={selected ? "text-gray-600" : "text-gray-400"}>
+        <span
+          className={selected?.value === "" ? "text-gray-400" : "text-gray-600"}
+        >
           {selected?.label || placeholder}
         </span>
         <ChevronDown
