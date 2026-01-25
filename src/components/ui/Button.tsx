@@ -15,16 +15,17 @@ export function Button({
   return (
     <button
       {...props}
-      className={`
+      className={[
+        `
         relative flex items-center justify-center gap-3
         px-4 py-3 rounded-lg
         text-gray-700
         hover:bg-indigo-50 hover:text-indigo-600
         transition-all group
         disabled:opacity-50 disabled:cursor-not-allowed
-        cursor-pointer hover:scale-102
-        ${className}
-      `}
+        cursor-pointer hover:scale-102`,
+        className,
+      ].join(" ")}
     >
       {Icon && (
         <Icon

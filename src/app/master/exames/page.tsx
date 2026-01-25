@@ -1,20 +1,31 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, Plus, Users, UserCheck, UserX, Filter } from "lucide-react";
+import { Search, Users, UserCheck, UserX, Filter } from "lucide-react";
 import { StatsGrid } from "@/src/components/cards";
 import InputSearch from "@/src/components/ui/InputSearch";
 import SearchableSelect from "@/src/components/ui/SearchableSelect";
-import { Button } from "@/src/components/ui/Button";
-import EmployeesTable from "@/src/components/tables/EmployeesTable";
 import { getCols } from "@/src/utils/gridUtils";
 import ExamsTable from "@/src/components/tables/ExamsTable";
 
+type ExamStatus = "valido" | "vencido" | "pendente";
+
+type ExamRow = {
+  id: number;
+  pacient: string;
+  company: string;
+  companyId: string; // string pq seus selects usam "1", "2", ...
+  exam: string;
+  examId: string;
+  realizationDate: string;
+  status: ExamStatus;
+};
+
 export default function ExamsPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedExam, setSelectedExam] = useState("");
-  const [selectedCompany, setSelectedCompany] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedEmployee, setSelectedEmployee] = useState<string>("");
+  const [selectedCompany, setSelectedCompany] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
 
   const statsCards = [
     {
@@ -47,7 +58,7 @@ export default function ExamsPage() {
     },
   ];
 
-  const exams = [
+  const exams: ExamRow[] = [
     {
       id: 1,
       pacient: "Ana Cristina Souza",
@@ -266,29 +277,36 @@ export default function ExamsPage() {
     { label: "Pendentes", value: "pendente" },
   ];
 
-  const optionsExams = [
-    { label: "Todos os exames", value: "" },
-    { label: "ASO Admissional", value: "1" },
-    { label: "Audiometria", value: "2" },
-    { label: "ASO Periódico", value: "3" },
-  ];
+  // Select de funcionário (derivado de exams)
+  const optionsEmployees = useMemo(() => {
+    const unique = Array.from(new Set(exams.map((e) => e.pacient))).sort();
+    return [
+      { label: "Selecione um funcionário", value: "" },
+      ...unique.map((name) => ({ label: name, value: name })),
+    ];
+  }, [exams]);
 
+  // Filtra EXAMES (mas sempre restringe ao funcionário selecionado)
   const filteredExams = useMemo(() => {
     const term = searchTerm.toLowerCase().trim();
 
     return exams.filter((exam) => {
-      const matchesSearch =
-        !term ||
-        [exam.pacient].some((field) => field.toLowerCase().includes(term));
+      // funcionário é obrigatório (pra “ver por funcionário”)
+      const matchesEmployee =
+        !!selectedEmployee && exam.pacient === selectedEmployee;
 
-      const matchesExam = !selectedExam || exam.examId === selectedExam;
+      const matchesSearch = !term || exam.pacient.toLowerCase().includes(term);
+
       const matchesCompany =
         !selectedCompany || exam.companyId === selectedCompany;
+
       const matchesStatus = !selectedStatus || exam.status === selectedStatus;
 
-      return matchesSearch && matchesExam && matchesCompany && matchesStatus;
+      return (
+        matchesEmployee && matchesSearch && matchesCompany && matchesStatus
+      );
     });
-  }, [exams, searchTerm, selectedExam, selectedCompany, selectedStatus]);
+  }, [exams, searchTerm, selectedEmployee, selectedCompany, selectedStatus]);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -305,12 +323,12 @@ export default function ExamsPage() {
           icon={Search}
         />
 
-        {/* Filtro Exames */}
+        {/* Filtro Funcionário */}
         <SearchableSelect
-          value={selectedExam}
-          onChange={setSelectedExam}
-          options={optionsExams}
-          placeholder="Exames"
+          value={selectedEmployee}
+          onChange={setSelectedEmployee}
+          options={optionsEmployees}
+          placeholder="Funcionário"
           icon={Filter}
         />
 
@@ -331,21 +349,25 @@ export default function ExamsPage() {
           placeholder="Status"
           icon={Filter}
         />
-
-        {/* Botão Adicionar */}
-        {/* <Button
-          label="Adicionar Colaborador"
-          icon={Plus}
-          className="w-full sm:w-auto px-4 md:px-6
-                    py-2 bg-linear-to-r from-green-500 to-emerald-500
-                    text-white rounded-xl hover:from-green-600 hover:to-emerald-600
-                    transition-all duration-300 font-semibold hover:text-white
-                    text-sm shadow-md hover:shadow-lg"
-        /> */}
       </div>
 
-      {/* Tabela de colaboradores */}
-      <ExamsTable exams={filteredExams} itemsPerPage={5} />
+      {/* Tabela de exames do funcionário */}
+      {selectedEmployee ? (
+        <div className="space-y-2">
+          <div className="text-sm text-gray-600">
+            Exibindo exames de:{" "}
+            <span className="font-semibold text-gray-900">
+              {selectedEmployee}
+            </span>
+          </div>
+
+          <ExamsTable exams={filteredExams} itemsPerPage={5} />
+        </div>
+      ) : (
+        <div className="rounded-xl border bg-white p-4 text-sm text-gray-600">
+          Selecione um funcionário para ver todos os exames dele.
+        </div>
+      )}
     </div>
   );
 }
