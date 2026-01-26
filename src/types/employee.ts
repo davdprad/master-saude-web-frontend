@@ -8,6 +8,17 @@ export interface Employee {
   status: string;
 }
 
+export interface EmployeeCounts {
+  total: number;
+  total_ativos: number;
+  total_inativos: number;
+}
+
+export interface EmployeesResponse {
+  employees: Employee[];
+  counts: EmployeeCounts;
+}
+
 export interface EmployeesTableProps {
   employees: Employee[];
   action?: () => void;

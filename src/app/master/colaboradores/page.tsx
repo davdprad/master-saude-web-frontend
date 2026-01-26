@@ -1,210 +1,236 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Search, Plus, Users, UserCheck, UserX, Filter } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, Plus, Users, UserCheck, UserX, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { StatsGrid } from "@/src/components/cards";
 import InputSearch from "@/src/components/ui/InputSearch";
 import SearchableSelect from "@/src/components/ui/SearchableSelect";
 import { Button } from "@/src/components/ui/Button";
 import EmployeesTable from "@/src/components/tables/EmployeesTable";
 import { getCols } from "@/src/utils/gridUtils";
+import { API_BASE_URL, endpoints } from "@/src/services/api";
+import { EmployeeCounts } from "@/src/types/employee";
 
 export default function EmployeesPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [companySearch, setCompanySearch] = useState("");
+  const [debouncedCompanySearch, setDebouncedCompanySearch] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
+  
+  const [employees, setEmployees] = useState([]);
+  const [counts, setCounts] = useState<EmployeeCounts | null>(null);
+  const [companies, setCompanies] = useState<Array<{ label: string; value: string }>>([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
+  // Debounce para o termo de busca
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setPage(1); // Reseta para a primeira página ao buscar
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Debounce para o termo de busca de empresa
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedCompanySearch(companySearch);
+      setPage(1); // Reseta para a primeira página ao buscar
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [companySearch]);
+
+  // Busca de empresas na API
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const params = new URLSearchParams();
+        params.append("page", "1");
+        params.append("limit", "1000");
+        
+        // Adiciona filtro de empresa se houver termo de busca
+        if (debouncedCompanySearch) {
+          params.append("empresa", debouncedCompanySearch);
+        }
+
+        const response = await fetch(`${API_BASE_URL}${endpoints.colaboradores}?${params.toString()}`);
+        if (!response.ok) throw new Error("Erro ao buscar empresas");
+        
+        const data = await response.json();
+        
+        // Extrai empresas únicas da lista de colaboradores
+        const companySet = new Set<string>();
+        data.employees.forEach((emp: any) => {
+          if (emp.DesEmpresa) {
+            companySet.add(emp.DesEmpresa);
+          }
+        });
+        
+        const uniqueCompanies = Array.from(companySet).map((companyName: string) => ({
+          label: companyName,
+          value: companyName
+        }));
+        
+        // Adiciona a opção "Todas as empresas" no início
+        setCompanies([
+          { label: "Todas as empresas", value: "" },
+          ...uniqueCompanies
+        ]);
+      } catch (error) {
+        console.error("Erro ao buscar empresas:", error);
+        // Fallback com opção padrão
+        setCompanies([{ label: "Todas as empresas", value: "" }]);
+      }
+    };
+
+    fetchCompanies();
+  }, [debouncedCompanySearch]);
+
+  // Busca de empresas imediata (sem debounce) para atualizar o dropdown em tempo real
+  useEffect(() => {
+    const fetchCompaniesImmediate = async () => {
+      if (!companySearch) {
+        // Se não houver termo de busca, não faz nada
+        return;
+      }
+
+      try {
+        const params = new URLSearchParams();
+        params.append("page", "1");
+        params.append("limit", "1000");
+        params.append("empresa", companySearch);
+
+        const response = await fetch(`${API_BASE_URL}${endpoints.colaboradores}?${params.toString()}`);
+        if (!response.ok) throw new Error("Erro ao buscar empresas");
+        
+        const data = await response.json();
+        
+        // Extrai empresas únicas da lista de colaboradores
+        const companySet = new Set<string>();
+        data.employees.forEach((emp: any) => {
+          if (emp.DesEmpresa) {
+            companySet.add(emp.DesEmpresa);
+          }
+        });
+        
+        const uniqueCompanies = Array.from(companySet).map((companyName: string) => ({
+          label: companyName,
+          value: companyName
+        }));
+        
+        // Adiciona a opção "Todas as empresas" no início
+        setCompanies([
+          { label: "Todas as empresas", value: "" },
+          ...uniqueCompanies
+        ]);
+      } catch (error) {
+        console.error("Erro ao buscar empresas:", error);
+        // Fallback com opção padrão
+        setCompanies([{ label: "Todas as empresas", value: "" }]);
+      }
+    };
+
+    fetchCompaniesImmediate();
+  }, [companySearch]);
+
+  // Reseta a página ao mudar filtros
+  useEffect(() => {
+    setPage(1);
+  }, [selectedCompany, selectedStatus]);
+
+  // Busca de dados na API
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      setLoading(true);
+      try {
+        const params = new URLSearchParams();
+        params.append("page", page.toString());
+        params.append("limit", limit.toString());
+
+        if (debouncedSearchTerm) {
+          const isName = /[a-zA-Z]/.test(debouncedSearchTerm);
+          params.append(isName ? "nome" : "cpf", isName ? debouncedSearchTerm : debouncedSearchTerm.replace(/\D/g, ""));
+        }
+
+        if (selectedCompany && selectedCompany !== "") {
+          params.append("empresa", selectedCompany);
+        }
+        if (selectedStatus) params.append("status", selectedStatus);
+
+        const url = `${API_BASE_URL}${endpoints.colaboradores}?${params.toString()}`;
+        console.log("Fetching URL:", url); // Para debug no console do navegador
+
+        const response = await fetch(url);
+        
+        if (!response.ok) throw new Error("Erro ao buscar colaboradores");
+
+        const data = await response.json();
+
+        const mappedEmployees = data.employees.map((emp: any) => ({
+          id: emp.NidFuncionario,
+          name: emp.NomFuncionario,
+          company: emp.DesEmpresa,
+          companyId: emp.NidEmpresa.toString(),
+          position: emp.DesFuncao,
+          admission: emp.DatASO, // Campo não retornado pela API
+          status: emp.status ? emp.status.toLowerCase() : "ativo",
+          cpf: emp.DesCPF,
+        }));
+
+        setEmployees(mappedEmployees);
+        
+        // Atualiza os contadores se estiverem disponíveis na resposta
+        if (data.total !== undefined || data.total_ativos !== undefined || data.total_inativos !== undefined) {
+          setCounts({
+            total: data.total || 0,
+            total_ativos: data.total_ativos || 0,
+            total_inativos: data.total_inativos || 0
+          });
+        }
+      } catch (error) {
+        console.error("Erro:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEmployees();
+  }, [debouncedSearchTerm, selectedCompany, selectedStatus, page]);
 
   const statsCards = [
     {
       icon: Users,
-      number: 150,
+      number: counts?.total || 0,
       label: "Total de Colaboradores",
       color: "text-blue-500",
       bgLight: "bg-blue-50",
     },
     {
       icon: UserCheck,
-      number: 145,
+      number: counts?.total_ativos || 0,
       label: "Colaboradores Ativos",
       color: "text-green-500",
       bgLight: "bg-green-50",
     },
     {
       icon: UserX,
-      number: 5,
+      number: counts?.total_inativos || 0,
       label: "Colaboradores Inativos",
       color: "text-red-500",
       bgLight: "bg-red-50",
     },
   ];
 
-  const employees = [
-    {
-      id: 1,
-      name: "Ana Cristina Souza",
-      company: "Empresa Alfa",
-      companyId: "1",
-      position: "Engenheira de Produção",
-      admission: "20/03/2024",
-      status: "ativo",
-    },
-    {
-      id: 2,
-      name: "João Paulo Mendes",
-      company: "Empresa Alfa",
-      companyId: "1",
-      position: "Técnico de Segurança",
-      admission: "15/01/2024",
-      status: "ativo",
-    },
-    {
-      id: 3,
-      name: "Fernanda Rocha Lima",
-      company: "Empresa Beta",
-      companyId: "2",
-      position: "Analista de RH",
-      admission: "15/01/2024",
-      status: "ativo",
-    },
-    {
-      id: 4,
-      name: "Fernanda Rochuino",
-      company: "Empresa Beta",
-      companyId: "2",
-      position: "Designer Gráfico",
-      admission: "11/12/2023",
-      status: "ativo",
-    },
-    {
-      id: 5,
-      name: "Carlos B Eduardo Brito",
-      company: "Empresa Alfa",
-      companyId: "1",
-      position: "Sprinter de Logística",
-      admission: "10/11/2023",
-      status: "inativo",
-    },
-    {
-      id: 6,
-      name: "Marcos Vinícius Tavares",
-      company: "Empresa Gama",
-      companyId: "3",
-      position: "Desenvolvedor Front-end",
-      admission: "05/02/2024",
-      status: "ativo",
-    },
-    {
-      id: 7,
-      name: "Patrícia Alves Nogueira",
-      company: "Empresa Beta",
-      companyId: "2",
-      position: "Coordenadora Administrativa",
-      admission: "22/08/2023",
-      status: "ativo",
-    },
-    {
-      id: 8,
-      name: "Ricardo Henrique Lopes",
-      company: "Empresa Alfa",
-      companyId: "1",
-      position: "Analista Financeiro",
-      admission: "03/07/2023",
-      status: "ativo",
-    },
-    {
-      id: 9,
-      name: "Juliana Martins Pacheco",
-      company: "Empresa Gama",
-      companyId: "3",
-      position: "Product Owner",
-      admission: "18/09/2023",
-      status: "ativo",
-    },
-    {
-      id: 10,
-      name: "Diego Rafael Cunha",
-      company: "Empresa Beta",
-      companyId: "2",
-      position: "Suporte de TI",
-      admission: "30/10/2023",
-      status: "inativo",
-    },
-    {
-      id: 11,
-      name: "Larissa Fontes Araujo",
-      company: "Empresa Alfa",
-      companyId: "1",
-      position: "Analista de Qualidade",
-      admission: "12/06/2024",
-      status: "ativo",
-    },
-    {
-      id: 12,
-      name: "Bruno Cavalcante Silva",
-      company: "Empresa Gama",
-      companyId: "3",
-      position: "DevOps Engineer",
-      admission: "02/04/2024",
-      status: "ativo",
-    },
-    {
-      id: 13,
-      name: "Renata Gomes Figueiredo",
-      company: "Empresa Beta",
-      companyId: "2",
-      position: "UX Researcher",
-      admission: "19/05/2024",
-      status: "ativo",
-    },
-    {
-      id: 14,
-      name: "Felipe Augusto Morais",
-      company: "Empresa Alfa",
-      companyId: "1",
-      position: "Analista de Dados",
-      admission: "27/02/2024",
-      status: "ativo",
-    },
-    {
-      id: 15,
-      name: "Camila Rodrigues Peixoto",
-      company: "Empresa Gama",
-      companyId: "3",
-      position: "Scrum Master",
-      admission: "14/03/2024",
-      status: "ativo",
-    },
-  ];
-
-  const optionsCompany = [
-    { label: "Todas as empresas", value: "" },
-    { label: "Empresa Alfa", value: "1" },
-    { label: "Empresa Beta", value: "2" },
-    { label: "Empresa Gama", value: "3" },
-  ];
 
   const optionsStatus = [
     { label: "Todos os status", value: "" },
-    { label: "Ativos", value: "ativo" },
-    { label: "Inativos", value: "inativo" },
+    { label: "Ativos", value: "1" },
+    { label: "Inativos", value: "0" },
   ];
-
-  const filteredEmployees = useMemo(() => {
-    const term = searchTerm.toLowerCase().trim();
-
-    return employees.filter((employee) => {
-      const matchesSearch =
-        !term ||
-        [employee.name].some((field) => field.toLowerCase().includes(term));
-
-      const matchesCompany =
-        !selectedCompany || employee.companyId === selectedCompany;
-      const matchesStatus =
-        !selectedStatus || employee.status === selectedStatus;
-
-      return matchesSearch && matchesCompany && matchesStatus;
-    });
-  }, [employees, searchTerm, selectedCompany, selectedStatus]);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -217,7 +243,7 @@ export default function EmployeesPage() {
         <InputSearch
           value={searchTerm}
           onChange={setSearchTerm}
-          placeholder="Buscar por nome..."
+          placeholder="Buscar por nome ou CPF..."
           icon={Search}
         />
 
@@ -225,7 +251,8 @@ export default function EmployeesPage() {
         <SearchableSelect
           value={selectedCompany}
           onChange={setSelectedCompany}
-          options={optionsCompany}
+          onSearch={setCompanySearch}
+          options={companies}
           placeholder="Empresas"
           icon={Filter}
         />
@@ -252,7 +279,42 @@ export default function EmployeesPage() {
       </div>
 
       {/* Tabela de colaboradores */}
-      <EmployeesTable employees={filteredEmployees} itemsPerPage={5} />
+      <div className="relative">
+        {loading && (
+          <div className="absolute inset-0 bg-white/50 z-10 flex items-center justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          </div>
+        )}
+        <EmployeesTable employees={employees} itemsPerPage={limit} />
+      </div>
+
+      {/* Paginação */}
+      <div className="flex justify-between items-center mt-4 px-2">
+        <span className="text-sm text-gray-500">
+          Mostrando {employees.length} de {counts?.total || 0} registros
+        </span>
+        <div className="flex gap-2 items-center">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1 || loading}
+            className="p-2 border rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            aria-label="Página anterior"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <span className="text-sm font-medium">
+            Página {page}
+          </span>
+          <button
+            onClick={() => setPage((p) => p + 1)}
+            disabled={employees.length < limit || page * limit >= (counts?.total || 0) || loading}
+            className="p-2 border rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            aria-label="Próxima página"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

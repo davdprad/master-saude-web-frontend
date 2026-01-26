@@ -13,6 +13,7 @@ interface SearchableSelectProps {
   options: Option[];
   placeholder?: string;
   icon?: LucideIcon;
+  onSearch?: (search: string) => void;
 }
 
 export default function SearchableSelect({
@@ -21,6 +22,7 @@ export default function SearchableSelect({
   options,
   placeholder = "Selecione...",
   icon: Icon,
+  onSearch,
 }: SearchableSelectProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -86,7 +88,12 @@ export default function SearchableSelect({
           <div className="p-2">
             <InputSearch
               value={search}
-              onChange={setSearch}
+              onChange={(value) => {
+                setSearch(value);
+                if (onSearch) {
+                  onSearch(value);
+                }
+              }}
               placeholder="Buscar..."
               icon={Search}
             />

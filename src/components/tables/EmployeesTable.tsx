@@ -41,9 +41,9 @@ export default function EmployeesTable({
 
         {/* Lista de Colaboradores */}
         <div className="divide-y divide-gray-100">
-          {paginatedEmployees.map((employee) => (
+          {paginatedEmployees.map((employee, index) => (
             <div
-              key={employee.id}
+              key={`${employee.id}-${index}`}
               className="grid grid-cols-1 lg:grid-cols-14 gap-4 p-4 lg:px-6 lg:py-4 hover:bg-linear-to-r hover:from-indigo-50/50 hover:to-transparent transition-all duration-200 group"
             >
               {/* Nome - Mobile: destaque, Desktop: col-span-3 */}
