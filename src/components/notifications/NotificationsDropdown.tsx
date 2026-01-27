@@ -6,7 +6,7 @@ import { NotificationItem } from "./NotificationItem";
 
 export default function NotificationsDropdown() {
   const [showNotifications, setShowNotifications] = useState(false);
-  const [headerHeight, setHeaderHeight] = useState(64);
+  const [headerHeight, setHeaderHeight] = useState(40);
 
   useEffect(() => {
     const header = document.querySelector("header");
@@ -34,7 +34,7 @@ export default function NotificationsDropdown() {
         style={{ "--header-h": `${headerHeight}px` } as React.CSSProperties}
         className={`
           fixed left-0 right-0 z-20
-          bg-white border border-gray-200 shadow-xl
+          bg-white border shadow-xl
           max-h-[50vh] h-auto flex flex-col rounded-none
           transition-all duration-200 ease-out
           transform
@@ -46,10 +46,14 @@ export default function NotificationsDropdown() {
           }
 
           top-(--header-h)
+          
+          rounded-b-lg
+          border-gray-200
+          border-t-0
 
           sm:absolute sm:top-full sm:mt-2
           sm:left-auto sm:right-0
-          sm:w-80 sm:max-h-96 sm:rounded-lg
+          sm:w-80 sm:max-h-96 sm:rounded-lg sm:border-t
         `}
       >
         {/* Header */}
@@ -69,11 +73,11 @@ export default function NotificationsDropdown() {
         </div>
 
         {/* Footer */}
-        <div className="p-3 text-center border-t border-gray-200">
+        {/* <div className="p-3 text-center border-t border-gray-200">
           <button className="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
             Ver todas
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

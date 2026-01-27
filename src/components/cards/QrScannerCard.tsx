@@ -91,7 +91,7 @@ function QrScannerHeader() {
   return (
     <div className="flex items-start justify-between gap-4">
       <div>
-        <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-slate-900">
+        <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600">
           <QrCode className="h-4 w-4" />
           Check-in
         </div>

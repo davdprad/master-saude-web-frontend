@@ -14,3 +14,9 @@ export interface ExamsTableProps {
   action?: () => void;
   itemsPerPage?: number;
 }
+
+export interface EmployeeExamsTableProps {
+  exams: Exam[];
+  action?: () => void;
+  itemsPerPage?: number;
+}

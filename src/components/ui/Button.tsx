@@ -1,21 +1,24 @@
 import { ButtonHTMLAttributes } from "react";
 import { LucideIcon } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label?: string;
   icon?: LucideIcon;
+  iconSize?: number;
 }
 
 export function Button({
   label,
   icon: Icon,
+  iconSize = 20,
   className = "",
   ...props
 }: ButtonProps) {
   return (
     <button
       {...props}
-      className={[
+      className={twMerge(
         `
         relative flex items-center justify-center gap-3
         px-4 py-3 rounded-lg
@@ -25,11 +28,11 @@ export function Button({
         disabled:opacity-50 disabled:cursor-not-allowed
         cursor-pointer hover:scale-102`,
         className,
-      ].join(" ")}
+      )}
     >
       {Icon && (
         <Icon
-          size={20}
+          size={iconSize}
           className="group-hover:scale-110 transition-transform"
         />
       )}

@@ -29,7 +29,7 @@ export default function SearchableSelect({
   const selected = options.find((o) => o.value === value);
 
   const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(search.toLowerCase())
+    option.label.toLowerCase().includes(search.toLowerCase()),
   );
 
   // Fecha ao clicar fora

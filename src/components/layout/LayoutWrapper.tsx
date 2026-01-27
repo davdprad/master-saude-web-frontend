@@ -22,7 +22,7 @@ export default function LayoutWrapper({ children, role }: LayoutWrapperProps) {
       />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header onSidebarClick={() => setSidebarOpen(!sidebarOpen)} />
-        <main className="flex-1 overflow-auto p-8 bg-gray-50">{children}</main>
+        <main className="flex-1 overflow-auto p-6 bg-gray-50">{children}</main>
       </div>
     </div>
   );

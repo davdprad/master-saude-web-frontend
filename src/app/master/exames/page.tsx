@@ -14,7 +14,7 @@ type ExamRow = {
   id: number;
   pacient: string;
   company: string;
-  companyId: string; // string pq seus selects usam "1", "2", ...
+  companyId: string;
   exam: string;
   examId: string;
   realizationDate: string;
