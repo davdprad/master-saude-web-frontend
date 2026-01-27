@@ -4,12 +4,12 @@ import InputSearch from "./InputSearch";
 
 interface Option {
   label: string;
-  value: string;
+  value: string | object | null;
 }
 
 interface SearchableSelectProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: string | object | null;
+  onChange: (value: string | object | null) => void;
   options: Option[];
   placeholder?: string;
   icon?: LucideIcon;
@@ -109,7 +109,7 @@ export default function SearchableSelect({
 
             {filteredOptions.map((option) => (
               <li
-                key={option.value}
+                key={JSON.stringify(option.value)}
                 onClick={() => {
                   onChange(option.value);
                   setOpen(false);

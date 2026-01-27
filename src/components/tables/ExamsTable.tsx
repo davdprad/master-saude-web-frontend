@@ -1,8 +1,9 @@
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Eye } from "lucide-react";
 import { Button } from "../ui/Button";
 import { Pagination } from "../ui/Pagination";
 import { useEffect, useMemo, useState } from "react";
 import { ExamsTableProps } from "@/src/types/exam";
+import { API_BASE_URL, endpoints } from "@/src/services/api";
 
 export default function ExamsTable({
   exams,
@@ -25,6 +26,27 @@ export default function ExamsTable({
     return exams.slice(start, end);
   }, [exams, currentPage, itemsPerPage]);
 
+  // Função para download do exame
+  const handleDownload = async (examId: string) => {
+    try {
+      console.log('Tentando baixar exame com ID:', examId);
+      console.log('URL completa:', `${API_BASE_URL}${endpoints.downloadExame}/${examId}`);
+      
+      // Testa se o ID é válido
+      if (!examId || examId === 'undefined' || examId === 'null') {
+        throw new Error('ID do exame inválido');
+      }
+      
+      // Redireciona para a URL do download (trata como redirecionamento)
+      window.open(`${API_BASE_URL}${endpoints.downloadExame}/${examId}`, '_blank');
+      
+      console.log('Redirecionamento para download iniciado');
+    } catch (error) {
+      console.error('Erro ao baixar exame:', error);
+      alert('Erro ao baixar exame. Verifique o console para mais detalhes.');
+    }
+  };
+
   return (
     <>
       {/* Tabela de Colaboradores */}
@@ -33,17 +55,17 @@ export default function ExamsTable({
         <div className="hidden lg:grid lg:grid-cols-14 gap-4 px-6 py-4 bg-linear-to-r from-indigo-50 to-blue-50 border-b border-gray-100 font-semibold text-sm text-gray-700 uppercase tracking-wider">
           <div className="col-span-3">Paciente</div>
           <div className="col-span-3">Exame</div>
-          <div className="col-span-3">Empresa</div>
-          <div className="col-span-2 text-center">Realização</div>
-          <div className="col-span-2 text-center">Status</div>
-          <div className="col-span-1 text-center">Ações</div>
+          <div className="col-span-2">Empresa</div>
+          <div className="col-span-3 text-center">Realização</div>
+          <div className="col-span-1 text-center">Download</div>
+          <div className="col-span-2"></div>
         </div>
 
         {/* Lista de Colaboradores */}
         <div className="divide-y divide-gray-100">
-          {paginatedExams.map((exam) => (
+          {paginatedExams.map((exam, index) => (
             <div
-              key={exam.id}
+              key={`${exam.id}-${index}`}
               className="grid grid-cols-1 lg:grid-cols-14 gap-4 p-4 lg:px-6 lg:py-4 hover:bg-linear-to-r hover:from-indigo-50/50 hover:to-transparent transition-all duration-200 group"
             >
               {/* Nome - Mobile: destaque, Desktop: col-span-3 */}
@@ -74,42 +96,29 @@ export default function ExamsTable({
               </div>
 
               {/* Empresa - Escondido no mobile */}
-              <div className="hidden lg:flex lg:col-span-3 items-center">
+              <div className="hidden lg:flex lg:col-span-2 items-center">
                 <div className="text-sm lg:text-base text-gray-700">
                   {exam.company}
                 </div>
               </div>
 
-              {/* Admissão */}
-              <div className="lg:col-span-2 flex items-center lg:justify-center">
-                <div className="text-sm lg:text-base text-gray-700">
-                  <span className="lg:hidden font-medium text-gray-500">
-                    Admissão:{" "}
-                  </span>
+              {/* Realização */}
+              <div className="lg:col-span-3 flex items-center justify-center">
+                <div className="text-sm lg:text-base text-gray-700 text-center">
                   {exam.realizationDate}
                 </div>
               </div>
 
-              {/* Status */}
-              <div className="lg:col-span-2 flex items-center lg:justify-center">
-                <span
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
-                    exam.status === "valido"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
-                  }`}
+              {/* Download */}
+              <div className="lg:col-span-1 flex items-center justify-center">
+                <button
+                  onClick={() => handleDownload(exam.nidAnexo?.toString() || exam.examId)}
+                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                  title="Download PDF"
                 >
-                  {exam.status}
-                </span>
-              </div>
-
-              {/* Ações */}
-              <div className="lg:col-span-1 flex items-center justify-start lg:justify-center">
-                <Button
-                  icon={MoreHorizontal}
-                  onClick={action}
-                  aria-label="Ações"
-                />
+                  <Eye size={16} className="mr-2" />
+                  PDF
+                </button>
               </div>
             </div>
           ))}
