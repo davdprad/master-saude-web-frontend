@@ -48,7 +48,7 @@ export default function ExamsTable({
             >
               {/* Nome - Mobile: destaque, Desktop: col-span-3 */}
               <div className="lg:col-span-3 flex items-center gap-3">
-                <div className="w-10 h-10 bg-linear-to-br from-indigo-100 to-blue-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                <div className="w-10 h-10 bg-linear-to-br from-indigo-100 to-blue-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
                   <span className="text-indigo-600 font-semibold text-sm">
                     {exam.pacient.charAt(0)}
                   </span>
