@@ -14,7 +14,7 @@ export const sidebarConfig = {
     { icon: Home, label: "Dashboard", href: "/master" },
     { icon: Users, label: "Colaboradores", href: "/master/colaboradores" },
     { icon: Building, label: "Empresas", href: "/master/empresas" },
-    { icon: FileText, label: "Exames", href: "/master/exames" },
+    // { icon: FileText, label: "Exames", href: "/master/exames" },
     { icon: Clock, label: "Fila de espera", href: "/master/fila" },
   ],
   EMPLOYEE: [

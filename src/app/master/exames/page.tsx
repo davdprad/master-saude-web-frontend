@@ -353,8 +353,8 @@ export default function ExamsPage() {
 
       {/* Tabela de exames do funcionário */}
       {selectedEmployee ? (
-        <div className="space-y-2">
-          <div className="text-sm text-gray-600">
+        <div className="space-y-3">
+          <div className="text-md text-gray-600">
             Exibindo exames de:{" "}
             <span className="font-semibold text-gray-900">
               {selectedEmployee}
@@ -364,7 +364,7 @@ export default function ExamsPage() {
           <ExamsTable exams={filteredExams} itemsPerPage={5} />
         </div>
       ) : (
-        <div className="rounded-xl border bg-white p-4 text-sm text-gray-600">
+        <div className="rounded-xl border border-gray-200 bg-white p-4 text-md text-gray-600">
           Selecione um funcionário para ver todos os exames dele.
         </div>
       )}

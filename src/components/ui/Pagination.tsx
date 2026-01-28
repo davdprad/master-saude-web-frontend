@@ -32,7 +32,7 @@ export function Pagination({
         </button>
 
         {/* Números – só desktop */}
-        <div className="hidden sm:flex items-center gap-1">
+        {/* <div className="hidden sm:flex items-center gap-1">
           {Array.from({ length: totalPages }).map((_, index) => {
             const page = index + 1;
             const isActive = page === currentPage;
@@ -51,7 +51,7 @@ export function Pagination({
               </button>
             );
           })}
-        </div>
+        </div> */}
 
         <button
           onClick={() => onPageChange(currentPage + 1)}

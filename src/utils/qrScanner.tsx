@@ -9,7 +9,6 @@ interface QrScannerProps {
 }
 
 const QrScanner = ({ onScanSuccess, onScanError }: QrScannerProps) => {
-
   const handleScan = (result: any) => {
     if (result) {
       const rawValue = result[0]?.rawValue;

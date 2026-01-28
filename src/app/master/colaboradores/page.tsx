@@ -1,210 +1,134 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Search, Plus, Users, UserCheck, UserX, Filter } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Search, Users, UserCheck, UserX, Filter } from "lucide-react";
 import { StatsGrid } from "@/src/components/cards";
 import InputSearch from "@/src/components/ui/InputSearch";
 import SearchableSelect from "@/src/components/ui/SearchableSelect";
-import { Button } from "@/src/components/ui/Button";
 import EmployeesTable from "@/src/components/tables/EmployeesTable";
 import { getCols } from "@/src/utils/gridUtils";
+import { getEmployees } from "@/src/services/employee";
+import { NewEmployee } from "@/src/types/employee";
+import { SelectOption } from "@/src/types/optionsSelect";
+import { getCompanies } from "@/src/services/company";
+import { mapCompaniesToOptions } from "@/src/utils/mapToOptions";
 
 export default function EmployeesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
+  const [companyQuery, setCompanyQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
 
+  const [employees, setEmployees] = useState<NewEmployee[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const [total, setTotal] = useState(0);
+  const [totalAtivos, setTotalAtivos] = useState(0);
+  const [totalInativos, setTotalInativos] = useState(0);
+
+  // Pages control
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const totalPages = useMemo(() => {
+    return Math.max(1, Math.ceil(total / itemsPerPage));
+  }, [total, itemsPerPage]);
+
+  useEffect(() => {
+    setCurrentPage((prev) => Math.min(prev, totalPages));
+  }, [totalPages]);
+
+  // Employees List
+  useEffect(() => {
+    async function load() {
+      try {
+        setLoading(true);
+
+        const data = await getEmployees({
+          page: currentPage,
+          limit: itemsPerPage,
+          nome: searchTerm || null,
+          empresa: selectedCompany || null,
+          status: selectedStatus ? (selectedStatus === "Ativo" ? 1 : 0) : null,
+        });
+
+        const mapped: NewEmployee[] = data.employees.map((e) => ({
+          NidFuncionario: String(e.NidFuncionario),
+          NomFuncionario: e.NomFuncionario,
+          DesCPF: e.DesCPF,
+          DesSetor: e.DesSetor,
+          DesFuncao: e.DesFuncao,
+          DesEmpresa: e.DesEmpresa,
+          NidEmpresa: String(e.NidEmpresa),
+          FlgAtivo: String(e.FlgAtivo),
+          status: e.status,
+          DatASO: e.DatASO,
+        }));
+
+        setEmployees(mapped);
+        setTotal(data.total);
+        setTotalAtivos(data.total_ativos);
+        setTotalInativos(data.total_inativos);
+      } catch (err) {
+        console.error("Erro ao buscar colaboradores:", err);
+        setEmployees([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    load();
+  }, [searchTerm, selectedCompany, selectedStatus, currentPage]);
+
+  // Options Company
+  const [optionsCompany, setOptionsCompany] = useState<SelectOption[]>([
+    { label: "Todas as empresas", value: "" },
+  ]);
+
+  // Options Company
+  useEffect(() => {
+    async function loadCompanies() {
+      const data = await getCompanies({
+        empresa: companyQuery || selectedCompany || null,
+      });
+      const options = mapCompaniesToOptions(data.companies);
+      setOptionsCompany(options);
+    }
+
+    loadCompanies();
+  }, [companyQuery, selectedCompany]);
+
+  // Options Status
+  const optionsStatus = [
+    { label: "Todos os status", value: "" },
+    { label: "Ativos", value: "Ativo" },
+    { label: "Inativos", value: "Inativo" },
+  ];
+
+  // Stats Cards
   const statsCards = [
     {
       icon: Users,
-      number: 150,
+      number: total,
       label: "Total de Colaboradores",
       color: "text-blue-500",
       bgLight: "bg-blue-50",
     },
     {
       icon: UserCheck,
-      number: 145,
+      number: totalAtivos,
       label: "Colaboradores Ativos",
       color: "text-green-500",
       bgLight: "bg-green-50",
     },
     {
       icon: UserX,
-      number: 5,
+      number: totalInativos,
       label: "Colaboradores Inativos",
       color: "text-red-500",
       bgLight: "bg-red-50",
     },
   ];
-
-  const employees = [
-    {
-      id: 1,
-      name: "Ana Cristina Souza",
-      company: "Empresa Alfa",
-      companyId: "1",
-      position: "Engenheira de Produção",
-      admission: "20/03/2024",
-      status: "ativo",
-    },
-    {
-      id: 2,
-      name: "João Paulo Mendes",
-      company: "Empresa Alfa",
-      companyId: "1",
-      position: "Técnico de Segurança",
-      admission: "15/01/2024",
-      status: "ativo",
-    },
-    {
-      id: 3,
-      name: "Fernanda Rocha Lima",
-      company: "Empresa Beta",
-      companyId: "2",
-      position: "Analista de RH",
-      admission: "15/01/2024",
-      status: "ativo",
-    },
-    {
-      id: 4,
-      name: "Fernanda Rochuino",
-      company: "Empresa Beta",
-      companyId: "2",
-      position: "Designer Gráfico",
-      admission: "11/12/2023",
-      status: "ativo",
-    },
-    {
-      id: 5,
-      name: "Carlos B Eduardo Brito",
-      company: "Empresa Alfa",
-      companyId: "1",
-      position: "Sprinter de Logística",
-      admission: "10/11/2023",
-      status: "inativo",
-    },
-    {
-      id: 6,
-      name: "Marcos Vinícius Tavares",
-      company: "Empresa Gama",
-      companyId: "3",
-      position: "Desenvolvedor Front-end",
-      admission: "05/02/2024",
-      status: "ativo",
-    },
-    {
-      id: 7,
-      name: "Patrícia Alves Nogueira",
-      company: "Empresa Beta",
-      companyId: "2",
-      position: "Coordenadora Administrativa",
-      admission: "22/08/2023",
-      status: "ativo",
-    },
-    {
-      id: 8,
-      name: "Ricardo Henrique Lopes",
-      company: "Empresa Alfa",
-      companyId: "1",
-      position: "Analista Financeiro",
-      admission: "03/07/2023",
-      status: "ativo",
-    },
-    {
-      id: 9,
-      name: "Juliana Martins Pacheco",
-      company: "Empresa Gama",
-      companyId: "3",
-      position: "Product Owner",
-      admission: "18/09/2023",
-      status: "ativo",
-    },
-    {
-      id: 10,
-      name: "Diego Rafael Cunha",
-      company: "Empresa Beta",
-      companyId: "2",
-      position: "Suporte de TI",
-      admission: "30/10/2023",
-      status: "inativo",
-    },
-    {
-      id: 11,
-      name: "Larissa Fontes Araujo",
-      company: "Empresa Alfa",
-      companyId: "1",
-      position: "Analista de Qualidade",
-      admission: "12/06/2024",
-      status: "ativo",
-    },
-    {
-      id: 12,
-      name: "Bruno Cavalcante Silva",
-      company: "Empresa Gama",
-      companyId: "3",
-      position: "DevOps Engineer",
-      admission: "02/04/2024",
-      status: "ativo",
-    },
-    {
-      id: 13,
-      name: "Renata Gomes Figueiredo",
-      company: "Empresa Beta",
-      companyId: "2",
-      position: "UX Researcher",
-      admission: "19/05/2024",
-      status: "ativo",
-    },
-    {
-      id: 14,
-      name: "Felipe Augusto Morais",
-      company: "Empresa Alfa",
-      companyId: "1",
-      position: "Analista de Dados",
-      admission: "27/02/2024",
-      status: "ativo",
-    },
-    {
-      id: 15,
-      name: "Camila Rodrigues Peixoto",
-      company: "Empresa Gama",
-      companyId: "3",
-      position: "Scrum Master",
-      admission: "14/03/2024",
-      status: "ativo",
-    },
-  ];
-
-  const optionsCompany = [
-    { label: "Todas as empresas", value: "" },
-    { label: "Empresa Alfa", value: "1" },
-    { label: "Empresa Beta", value: "2" },
-    { label: "Empresa Gama", value: "3" },
-  ];
-
-  const optionsStatus = [
-    { label: "Todos os status", value: "" },
-    { label: "Ativos", value: "ativo" },
-    { label: "Inativos", value: "inativo" },
-  ];
-
-  const filteredEmployees = useMemo(() => {
-    const term = searchTerm.toLowerCase().trim();
-
-    return employees.filter((employee) => {
-      const matchesSearch =
-        !term ||
-        [employee.name].some((field) => field.toLowerCase().includes(term));
-
-      const matchesCompany =
-        !selectedCompany || employee.companyId === selectedCompany;
-      const matchesStatus =
-        !selectedStatus || employee.status === selectedStatus;
-
-      return matchesSearch && matchesCompany && matchesStatus;
-    });
-  }, [employees, searchTerm, selectedCompany, selectedStatus]);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -225,6 +149,7 @@ export default function EmployeesPage() {
         <SearchableSelect
           value={selectedCompany}
           onChange={setSelectedCompany}
+          setQuery={setCompanyQuery}
           options={optionsCompany}
           placeholder="Empresas"
           icon={Filter}
@@ -238,21 +163,28 @@ export default function EmployeesPage() {
           placeholder="Status"
           icon={Filter}
         />
-
-        {/* Botão Adicionar */}
-        {/* <Button
-          label="Adicionar Colaborador"
-          icon={Plus}
-          className="w-full sm:w-auto px-4 md:px-6
-                    py-2 bg-linear-to-r from-green-500 to-emerald-500
-                    text-white rounded-xl hover:from-green-600 hover:to-emerald-600
-                    transition-all duration-300 font-semibold hover:text-white
-                    text-sm shadow-md hover:shadow-lg"
-        /> */}
       </div>
 
-      {/* Tabela de colaboradores */}
-      <EmployeesTable employees={filteredEmployees} itemsPerPage={5} />
+      <div
+        className={`transition-all duration-300 ease-out ${
+          loading
+            ? "opacity-50 blur-[1px] pointer-events-none"
+            : "opacity-100 blur-0"
+        }`}
+      >
+        <EmployeesTable
+          employees={employees}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
+
+      {loading && (
+        <div className="mt-2 text-sm text-gray-500 animate-pulse">
+          Carregando colaboradores...
+        </div>
+      )}
     </div>
   );
 }

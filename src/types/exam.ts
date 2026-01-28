@@ -1,6 +1,7 @@
 export interface Exam {
-  id: number;
-  pacient: string;
+  id: string;
+  employee: string;
+  employeeId?: string;
   company: string;
   companyId: string;
   exam: string;

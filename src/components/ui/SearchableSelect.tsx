@@ -10,6 +10,7 @@ interface Option {
 interface SearchableSelectProps {
   value: string;
   onChange: (value: string) => void;
+  setQuery?: (value: string) => void;
   options: Option[];
   placeholder?: string;
   icon?: LucideIcon;
@@ -18,6 +19,7 @@ interface SearchableSelectProps {
 export default function SearchableSelect({
   value,
   onChange,
+  setQuery,
   options,
   placeholder = "Selecione...",
   icon: Icon,
@@ -31,6 +33,17 @@ export default function SearchableSelect({
   const filteredOptions = options.filter((option) =>
     option.label.toLowerCase().includes(search.toLowerCase()),
   );
+
+  // Sempre que o usuário digitar, atualiza o setQuery também
+  useEffect(() => {
+    if (!setQuery) return;
+
+    const timeout = setTimeout(() => {
+      setQuery(search);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [search, setQuery]);
 
   // Fecha ao clicar fora
   useEffect(() => {
@@ -100,9 +113,9 @@ export default function SearchableSelect({
               </li>
             )}
 
-            {filteredOptions.map((option) => (
+            {filteredOptions.map((option, index) => (
               <li
-                key={option.value}
+                key={`${option.value}-${index}`}
                 onClick={() => {
                   onChange(option.value);
                   setOpen(false);
