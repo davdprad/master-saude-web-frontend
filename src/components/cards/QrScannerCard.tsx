@@ -29,9 +29,9 @@ export default function QrScannerCard({
             label="Escanear QR Code"
             icon={Camera}
             onClick={() => setOpen(true)}
-            className="bg-indigo-600 text-white hover:bg-indigo-700 hover:text-white w-full"
+            className="bg-linear-to-br from-indigo-500 to-indigo-700 text-white w-full text-md px-6 py-3 gap-2 rounded-xl hover:bg-indigo-800 hover:text-white transition-all"
           />
-          <p className="mt-3 text-xs text-slate-500">
+          <p className="mt-3 text-sm text-slate-600">
             Dica: habilite a câmera quando solicitado.
           </p>
         </div>
@@ -91,20 +91,18 @@ function QrScannerHeader() {
   return (
     <div className="flex items-start justify-between gap-4">
       <div>
-        <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600">
+        <div className="inline-flex items-center gap-2 rounded-full bg-linear-to-br from-indigo-50 to-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-600">
           <QrCode className="h-4 w-4" />
           Check-in
         </div>
 
-        <h2 className="mt-3 text-xl font-semibold text-slate-900">
-          Bem-vindo(a)!
-        </h2>
+        <h2 className="mt-3 text-xl font-bold text-slate-900">Bem-vindo(a)!</h2>
         <p className="mt-1 text-sm text-slate-600">
           Para entrar na fila, escaneie o QR Code na recepção.
         </p>
       </div>
 
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-sm hover:scale-105 transition-all">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-indigo-700 text-white shadow-sm hover:scale-105 transition-all">
         <QrCode size={25} />
       </div>
     </div>

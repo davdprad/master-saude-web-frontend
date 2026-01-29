@@ -8,7 +8,7 @@ export default function Card({
   return (
     <div
       className={[
-        "rounded-2xl border border-slate-200 bg-white shadow-sm",
+        "rounded-2xl border border-gray-200 bg-white hover:shadow-sm overflow-hidden",
         className,
       ].join(" ")}
     >

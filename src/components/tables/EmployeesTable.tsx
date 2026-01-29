@@ -1,7 +1,6 @@
-import { FileText, MoreHorizontal } from "lucide-react";
+import { FileText } from "lucide-react";
 import { Button } from "../ui/Button";
 import { Pagination } from "../ui/Pagination";
-import { useEffect, useMemo, useState } from "react";
 import { EmployeesTableProps } from "@/src/types/employee";
 import { useRouter } from "next/navigation";
 
@@ -78,7 +77,7 @@ export default function EmployeesTable({
                   <span className="lg:hidden font-medium text-gray-500">
                     Admissão:{" "}
                   </span>
-                  {employee.DatASO}
+                  {employee.DatASO || "Sem data"}
                 </div>
               </div>
 
@@ -103,7 +102,7 @@ export default function EmployeesTable({
                   label="Exames"
                   onClick={() => onOpenEmployee(employee.NidFuncionario)}
                   aria-label="Exames"
-                  className="bg-indigo-600 text-white text-sm px-3 py-2 gap-2 rounded-xl hover:bg-indigo-700 hover:text-white"
+                  className="bg-linear-to-br from-indigo-500 to-indigo-700 text-white text-sm px-3 py-2 gap-2 rounded-xl hover:bg-indigo-800 hover:text-white transition-all"
                 />
               </div>
             </div>

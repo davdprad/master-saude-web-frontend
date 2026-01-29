@@ -1,4 +1,4 @@
-import { Download, MoreHorizontal } from "lucide-react";
+import { Download, FileText, MoreHorizontal } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useEffect, useMemo, useState } from "react";
 import { EmployeeExamsTableProps } from "@/src/types/exam";
@@ -28,12 +28,11 @@ export default function EmployeeExamsTable({
   return (
     <>
       {/* Tabela de Colaboradores */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden">
         {/* Header da Tabela */}
-        <div className="hidden lg:grid lg:grid-cols-12 gap-4 px-6 py-4 bg-linear-to-r from-indigo-50 to-blue-50 border-b border-gray-100 font-semibold text-sm text-gray-700 uppercase tracking-wider">
+        <div className="hidden lg:grid lg:grid-cols-10 gap-4 px-6 py-3 bg-indigo-50 border-b border-gray-100 font-semibold text-sm text-gray-900 tracking-wider">
           <div className="col-span-6">Exame</div>
           <div className="col-span-2 text-center">Data de Realização</div>
-          <div className="col-span-2 text-center">Status</div>
           <div className="col-span-2 text-center">Ações</div>
         </div>
 
@@ -42,44 +41,44 @@ export default function EmployeeExamsTable({
           {paginatedExams.map((exam) => (
             <div
               key={exam.id}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-4 p-4 lg:px-6 lg:py-4 hover:bg-linear-to-r hover:from-indigo-50/50 hover:to-transparent transition-all duration-200 group"
+              className="grid grid-cols-1 lg:grid-cols-10 gap-1 lg:gap-4 p-4 lg:px-6 lg:py-3 hover:bg-linear-to-r hover:from-indigo-50/50 hover:to-transparent transition-all duration-200 group"
             >
               {/* Nome - Mobile: destaque, Desktop: col-span-3 */}
               <div className="lg:col-span-6 flex items-center gap-3">
-                <div className="min-w-0 flex-1">
-                  <div className="font-semibold text-gray-900 truncate">
-                    {exam.exam}
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <div className="w-8 h-8 bg-linear-to-br from-indigo-100 to-indigo-300 rounded-full flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+                    <FileText
+                      size={18}
+                      className="text-indigo-600"
+                      strokeWidth={2}
+                    />
                   </div>
-                  <div className="text-sm text-gray-500 lg:hidden">
-                    Data: {exam.realizationDate}
+                  <div className="flex flex-col">
+                    <div className="text-sm font-semibold text-gray-900 truncate">
+                      {exam.exam}
+                    </div>
+                    <div className="text-sm text-gray-500 lg:hidden">
+                      Data: {exam.realizationDate}
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Data */}
-              <div className="hidden lg:flex lg:col-span-2 items-center justify-between lg:justify-center">
-                {exam.realizationDate}
-              </div>
-
-              {/* Status */}
-              <div className="hidden lg:flex lg:col-span-2 items-center justify-between lg:justify-center">
-                {exam.status}
+              <div className="hidden lg:flex lg:col-span-2 text-sm items-center justify-between lg:justify-center">
+                {exam.realizationDate || "Sem data"}
               </div>
 
               {/* Ações */}
-              <div className="flex lg:col-span-2 items-center justify-between lg:justify-center">
+              <div className="flex lg:col-span-2 items-center justify-end lg:justify-center">
                 <Button
                   label="Baixar"
                   icon={Download}
                   iconSize={18}
                   onClick={action}
                   aria-label="Ações"
-                  className="bg-indigo-600 text-white text-sm px-3 py-2 gap-2 rounded-xl hover:bg-indigo-700 hover:text-white"
+                  className="bg-linear-to-br from-indigo-500 to-indigo-700 text-white text-sm px-3 py-2 gap-2 rounded-xl hover:bg-indigo-800 hover:text-white transition-all"
                 />
-
-                <div className="flex lg:hidden items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600">
-                  {exam.status}
-                </div>
               </div>
             </div>
           ))}

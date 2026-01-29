@@ -1,21 +1,4 @@
 export interface Employee {
-  id: string;
-  name: string;
-  company: string;
-  companyId: string;
-  position: string;
-  admission: string;
-  status: string;
-}
-
-export interface EmployeesTableProps {
-  employees: NewEmployee[];
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
-
-export interface NewEmployee {
   NidFuncionario: string;
   NomFuncionario: string;
   DesCPF: string;
@@ -28,6 +11,13 @@ export interface NewEmployee {
   DatASO: string;
 }
 
+export interface EmployeesTableProps {
+  employees: Employee[];
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+
 export interface EmployeesFilters {
   page?: number;
   limit?: number;
@@ -38,7 +28,7 @@ export interface EmployeesFilters {
 }
 
 export interface EmployeesResponse {
-  employees: NewEmployee[];
+  employees: Employee[];
   total: number;
   total_ativos: number;
   total_inativos: number;

@@ -16,29 +16,25 @@ export default function DashboardPage() {
       icon: Clock,
       number: 4,
       label: "Pacientes em Espera",
-      color: "text-blue-500",
-      bgLight: "bg-blue-50",
+      color: "blue",
     },
     {
       icon: FileX,
       number: 23,
       label: "Exames Vencidos",
-      color: "text-red-500",
-      bgLight: "bg-red-50",
+      color: "red",
     },
     {
       icon: Users,
       number: 150,
       label: "Total Colaboradores",
-      color: "text-green-500",
-      bgLight: "bg-green-50",
+      color: "green",
     },
     {
       icon: Building,
       number: 39,
       label: "Empresas Ativas",
-      color: "text-purple-500",
-      bgLight: "bg-purple-50",
+      color: "indigo",
     },
   ];
 

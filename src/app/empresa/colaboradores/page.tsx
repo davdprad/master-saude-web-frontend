@@ -38,6 +38,8 @@ export default function EmployeesPage() {
     setCurrentPage((prev) => Math.min(prev, totalPages));
   }, [totalPages]);
 
+  const currentCompany = "Clinica Master Saude";
+
   // Employees List
   useEffect(() => {
     async function load() {
@@ -48,7 +50,7 @@ export default function EmployeesPage() {
           page: currentPage,
           limit: itemsPerPage,
           nome: searchTerm || null,
-          empresa: selectedCompany || null,
+          empresa: currentCompany || null,
           status: selectedStatus ? (selectedStatus === "Ativo" ? 1 : 0) : null,
         });
 
@@ -144,7 +146,7 @@ export default function EmployeesPage() {
         />
 
         {/* Filtro Empresa */}
-        <SearchableSelect
+        {/* <SearchableSelect
           value={selectedCompany}
           onChange={setSelectedCompany}
           setQuery={setCompanyQuery}
@@ -152,7 +154,7 @@ export default function EmployeesPage() {
           placeholder="Empresas"
           icon={Filter}
           debounceMs={500}
-        />
+        /> */}
 
         {/* Filtro Status */}
         <SearchableSelect

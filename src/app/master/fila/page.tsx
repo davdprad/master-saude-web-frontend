@@ -165,29 +165,25 @@ export default function QueueManagementPage() {
         icon: Clock,
         number: waiting,
         label: "Aguardando",
-        color: "text-blue-500",
-        bgLight: "bg-blue-50",
+        color: "blue",
       },
       {
         icon: CheckCircle2,
         number: called,
         label: "Chamados",
-        color: "text-yellow-500",
-        bgLight: "bg-yellow-50",
+        color: "yellow",
       },
       {
         icon: Users,
         number: inService,
         label: "Em Atendimento",
-        color: "text-green-500",
-        bgLight: "bg-green-50",
+        color: "green",
       },
       {
         icon: XCircle,
         number: total,
         label: "Total na Fila",
-        color: "text-purple-500",
-        bgLight: "bg-purple-50",
+        color: "indigo",
       },
     ];
   }, [queue]);

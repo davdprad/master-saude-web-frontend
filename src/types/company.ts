@@ -9,9 +9,10 @@ export interface Company {
 }
 
 export interface CompaniesTableProps {
-  companies: Company[];
-  action?: () => void;
-  itemsPerPage?: number;
+  companies: NewCompany[];
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 export interface NewCompany {

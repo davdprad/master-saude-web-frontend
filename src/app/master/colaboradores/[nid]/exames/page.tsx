@@ -19,20 +19,6 @@ import ExamsTable from "@/src/components/tables/ExamsTable";
 import { Exam } from "@/src/types/exam";
 import { Button } from "@/src/components/ui/Button";
 
-type ExamStatus = "valido" | "vencido" | "pendente";
-
-type ExamRow = {
-  id: number;
-  employeeNid: string; // <-- agora vincula pelo nid
-  pacient: string;
-  company: string;
-  companyId: string;
-  exam: string;
-  examId: string;
-  realizationDate: string; // "DD/MM/YYYY"
-  status: ExamStatus;
-};
-
 export default function EmployeeExamsPage() {
   const router = useRouter();
   const params = useParams<{ nid: string }>();

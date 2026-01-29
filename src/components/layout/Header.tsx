@@ -33,7 +33,7 @@ export default function Header({ onSidebarClick }: HeaderProps) {
               {title}
             </h2>
             <p className="text-sm text-gray-500 hidden sm:block">
-              Olá, seja bem-vindo!
+              Olá, seja bem-vindo(a)!
             </p>
           </div>
         </div>

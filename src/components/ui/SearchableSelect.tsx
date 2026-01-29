@@ -10,10 +10,24 @@ interface Option {
 interface SearchableSelectProps {
   value: string;
   onChange: (value: string) => void;
-  setQuery?: (value: string) => void;
   options: Option[];
   placeholder?: string;
   icon?: LucideIcon;
+
+  /**
+   * Callback opcional para busca remota (API).
+   * É chamado quando o usuário digita no campo de busca.
+   * Geralmente usado para atualizar filtros paginados.
+   */
+  setQuery?: (value: string) => void;
+
+  /**
+   * Tempo de debounce em milissegundos.
+   * Quando 0, o `onChange` é disparado imediatamente.
+   *
+   * @default 0
+   */
+  debounceMs?: number;
 }
 
 export default function SearchableSelect({
@@ -23,6 +37,7 @@ export default function SearchableSelect({
   options,
   placeholder = "Selecione...",
   icon: Icon,
+  debounceMs = 0,
 }: SearchableSelectProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -33,17 +48,6 @@ export default function SearchableSelect({
   const filteredOptions = options.filter((option) =>
     option.label.toLowerCase().includes(search.toLowerCase()),
   );
-
-  // Sempre que o usuário digitar, atualiza o setQuery também
-  useEffect(() => {
-    if (!setQuery) return;
-
-    const timeout = setTimeout(() => {
-      setQuery(search);
-    }, 300);
-
-    return () => clearTimeout(timeout);
-  }, [search, setQuery]);
 
   // Fecha ao clicar fora
   useEffect(() => {
@@ -99,9 +103,13 @@ export default function SearchableSelect({
           <div className="p-2">
             <InputSearch
               value={search}
-              onChange={setSearch}
+              onChange={(v) => {
+                setSearch(v);
+                setQuery?.(v);
+              }}
               placeholder="Buscar..."
               icon={Search}
+              debounceMs={debounceMs}
             />
           </div>
 
