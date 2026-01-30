@@ -272,7 +272,7 @@ function QueueCard({ items }: { items: QueueItem[] }) {
             className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 lg:gap-4 p-4 md:p-5 hover:bg-linear-to-r hover:from-indigo-50/50 hover:to-transparent transition-all duration-200 group"
           >
             <div className="flex items-center gap-3 md:gap-4 min-w-0 flex-1">
-              <div className="flex-shrink-0 w-12 h-12 bg-linear-to-br from-indigo-100 to-blue-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <div className="shrink-0 w-12 h-12 bg-linear-to-br from-indigo-100 to-blue-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 <UserCircle2 className="w-7 h-7 text-indigo-600" />
               </div>
 
@@ -283,7 +283,7 @@ function QueueCard({ items }: { items: QueueItem[] }) {
                   </div>
 
                   <span
-                    className={`flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${
+                    className={`shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${
                       item.priority === "prioridade"
                         ? "bg-amber-50 text-amber-700"
                         : "bg-gray-100 text-gray-700"
@@ -293,7 +293,7 @@ function QueueCard({ items }: { items: QueueItem[] }) {
                   </span>
 
                   <span
-                    className={`flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${
+                    className={`shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${
                       statusPill[item.status]
                     }`}
                   >

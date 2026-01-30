@@ -73,7 +73,7 @@ function CardDescription({
   content: string;
 }) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+    <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 hover:scale-102 transition-all">
       <h2 className="text-base font-semibold text-gray-900">{title}</h2>
       <p className="mt-1 text-sm text-gray-600">{content}</p>
     </div>
