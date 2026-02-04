@@ -1,19 +1,16 @@
 export interface Exam {
-  id: string;
-  employee: string;
-  employeeId?: string;
-  company: string;
-  companyId: string;
-  exam: string;
-  examId: string;
-  realizationDate: string;
-  status: string;
+  NidAnexo: string;
+  NomExame: string;
+  DesAnexo: string;
+  DatASO: string | null;
+  DatValidade: string | null;
 }
 
 export interface ExamsTableProps {
   exams: Exam[];
-  action?: () => void;
-  itemsPerPage?: number;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 export interface EmployeeExamsTableProps {
@@ -21,3 +18,9 @@ export interface EmployeeExamsTableProps {
   action?: () => void;
   itemsPerPage?: number;
 }
+
+export interface ExamsFilters {
+  nidFuncionario: number;
+}
+
+export type ExamsResponse = Exam[];

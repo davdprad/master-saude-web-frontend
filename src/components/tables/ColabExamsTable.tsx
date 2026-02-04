@@ -40,7 +40,7 @@ export default function EmployeeExamsTable({
         <div className="divide-y divide-gray-100">
           {paginatedExams.map((exam) => (
             <div
-              key={exam.id}
+              key={exam.NidAnexo}
               className="grid grid-cols-1 lg:grid-cols-10 gap-1 lg:gap-4 p-4 lg:px-6 lg:py-3 hover:bg-linear-to-r hover:from-indigo-50/50 hover:to-transparent transition-all duration-200 group"
             >
               {/* Nome - Mobile: destaque, Desktop: col-span-3 */}
@@ -55,10 +55,10 @@ export default function EmployeeExamsTable({
                   </div>
                   <div className="flex flex-col">
                     <div className="text-sm font-semibold text-gray-900 truncate">
-                      {exam.exam}
+                      {exam.NomExame}
                     </div>
                     <div className="text-sm text-gray-500 lg:hidden">
-                      Data: {exam.realizationDate}
+                      Data: {exam.DatASO || "Sem data"}
                     </div>
                   </div>
                 </div>
@@ -66,7 +66,7 @@ export default function EmployeeExamsTable({
 
               {/* Data */}
               <div className="hidden lg:flex lg:col-span-2 text-sm items-center justify-between lg:justify-center">
-                {exam.realizationDate || "Sem data"}
+                {exam.DatASO || "Sem data"}
               </div>
 
               {/* Ações */}

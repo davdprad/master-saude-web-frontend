@@ -27,7 +27,5 @@ export async function getEmployees(
     },
   );
 
-  console.log(response.data);
-
   return response.data;
 }
