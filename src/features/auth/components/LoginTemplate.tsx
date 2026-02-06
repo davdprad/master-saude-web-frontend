@@ -1,0 +1,89 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Input } from "@/src/components/ui/Input";
+import Card from "@/src/components/cards/Card";
+import { Button } from "@/src/components/ui/Button";
+import { LeftPanel } from "./LeftPanel";
+import { useLogin } from "../hooks/useLogin";
+import { RoleLoginConfig } from "@/src/types/auth";
+
+export default function LoginTemplate({ config }: { config: RoleLoginConfig }) {
+  const router = useRouter();
+  const { login: doLogin, loading, formError } = useLogin(config.apiEndpoint);
+
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const result = await doLogin(login, password);
+    if (result.ok) router.push(config.redirectTo);
+  }
+
+  return (
+    <div className="min-h-dvh sm:min-h-screen bg-gray-50">
+      <div className="min-h-dvh sm:min-h-screen grid grid-cols-1 lg:grid-cols-2">
+        <LeftPanel config={config} />
+
+        <div className="flex items-center justify-center px-6">
+          <div className="w-full max-w-md">
+            <Card className="rounded-3xl shadow-sm p-8 sm:p-10 border-0 ring-1 ring-gray-200">
+              <div className="flex items-center lg:hidden">
+                <Image
+                  src={config.logos.dark}
+                  alt="Logo"
+                  className="rounded-lg h-12"
+                />
+              </div>
+
+              <div className="mt-10 lg:mt-0">
+                <h2 className="text-xl font-semibold text-gray-900">
+                  {config.title}
+                </h2>
+                <p className="mt-1 text-sm text-gray-500">{config.subtitle}</p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+                <Input
+                  label="Login"
+                  type="text"
+                  placeholder="Login"
+                  value={login}
+                  onChange={(e) => setLogin(e.target.value)}
+                  disabled={loading}
+                />
+
+                <Input
+                  label="Senha"
+                  type="password"
+                  autoComplete="current-password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
+                />
+
+                {formError ? (
+                  <div className="mt-4 rounded-xl ring-1 ring-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+                    {formError}
+                  </div>
+                ) : null}
+
+                <Button
+                  type="submit"
+                  label={loading ? "Entrando..." : "Entrar"}
+                  disabled={loading}
+                  className="w-full bg-linear-to-br from-indigo-500 to-indigo-700 text-white text-sm px-4 py-3 gap-2 rounded-xl hover:bg-indigo-800 hover:text-white transition-all"
+                />
+              </form>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -4,19 +4,19 @@ import LogoMaster from "@/public/logo-master.svg";
 import LogoMasterWhite from "@/public/logo-master-white.svg";
 
 const config: RoleLoginConfig = {
-  role: "master",
-  apiEndpoint: "/auth/master/login",
-  redirectTo: "/master/inicio",
+  role: "cliente",
+  apiEndpoint: "/auth/cliente/login",
+  redirectTo: "/cliente/inicio",
   title: "Entrar",
   subtitle: "Use seu login e senha para acessar",
   logos: { dark: LogoMaster, white: LogoMasterWhite },
   left: {
     productName: "Portal Master Saúde",
-    tagline: "Acesso administrativo",
+    tagline: "Acesso cliente",
     welcomeTitle: "Olá, seja muito bem-vindo(a)!",
     welcomeText:
-      "Entre com suas credenciais para gerenciar empresas, colaboradores e configurações do sistema de forma segura.",
-    icon: "crown",
+      "Entre com suas credenciais para visualizar seus exames.",
+    icon: "user",
   },
 };
 
