@@ -5,7 +5,6 @@ import LogoMasterWhite from "@/public/logo-master-white.svg";
 
 const config: RoleLoginConfig = {
   role: "convenio",
-  apiEndpoint: "/auth/convenio/login",
   redirectTo: "/convenio/inicio",
   title: "Entrar",
   subtitle: "Use seu login e senha para acessar",

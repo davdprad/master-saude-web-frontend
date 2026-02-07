@@ -1,6 +1,5 @@
 export type RoleLoginConfig = {
   role: "master" | "cliente" | "convenio";
-  apiEndpoint: string; // ex: "/api/auth/master/login"
   redirectTo: string; // ex: "/master"
   title: string; // "Entrar"
   subtitle: string; // "Use seu login e senha para acessar"
@@ -17,13 +16,8 @@ export type RoleLoginConfig = {
   };
 };
 
-export type AuthTokens = {
-  access_token: string;
-  refresh_token: string;
-  refresh_expires_at: number; // unix timestamp (segundos)
-  refresh_id: number;
-  token_type: "bearer";
-  role: "master" | "cliente" | "convenio" | string;
+export type AuthSession = {
+  role: Role;
   company_id: number | null;
   employee_id: number | null;
 };
@@ -32,3 +26,5 @@ export type LoginPayload = {
   login: string;
   senha: string;
 };
+
+export type Role = "master" | "convenio" | "cliente";

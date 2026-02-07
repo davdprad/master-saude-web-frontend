@@ -1,16 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { getExams } from "@/src/services/exams";
+import { getMyExams } from "@/src/services/exams";
 import { Exam } from "@/src/types/exam";
 import { mapExamsToUI } from "../mappers";
 import { ITEMS_PER_PAGE } from "../constants";
 
-type UseExamsParams = {
-  nidFuncionario: string;
-};
-
-export function useExams({ nidFuncionario }: UseExamsParams) {
+export function useMyExams() {
   const [allExams, setAllExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -35,11 +31,7 @@ export function useExams({ nidFuncionario }: UseExamsParams) {
       try {
         setLoading(true);
 
-        console.log(Number(nidFuncionario));
-
-        const data = await getExams({
-          nidFuncionario: Number(nidFuncionario),
-        });
+        const data = await getMyExams();
 
         if (cancelled) return;
 

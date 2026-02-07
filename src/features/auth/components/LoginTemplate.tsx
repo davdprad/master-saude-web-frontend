@@ -12,7 +12,7 @@ import { RoleLoginConfig } from "@/src/types/auth";
 
 export default function LoginTemplate({ config }: { config: RoleLoginConfig }) {
   const router = useRouter();
-  const { login: doLogin, loading, formError } = useLogin(config.apiEndpoint);
+  const { login: doLogin, loading, formError } = useLogin(config.role);
 
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { ChevronDown, LogOut, User, Settings } from "lucide-react";
+import { postLogout } from "@/src/services/auth";
+import { useRouter } from "next/navigation";
 
 interface UserDropdownProps {
   userName?: string;
@@ -15,6 +17,12 @@ export default function UserDropdown({
   userRole = "Admin",
 }: UserDropdownProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const router = useRouter();
+
+  async function handleLogout() {
+    await postLogout();
+    router.replace("/master");
+  }
 
   return (
     <div className="relative">
@@ -62,7 +70,10 @@ export default function UserDropdown({
               </a>
             </div> */}
             <div className="border-t border-gray-200 py-2">
-              <button className="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full"
+              >
                 <LogOut size={18} />
                 Sair
               </button>

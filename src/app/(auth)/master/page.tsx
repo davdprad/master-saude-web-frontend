@@ -5,7 +5,6 @@ import LogoMasterWhite from "@/public/logo-master-white.svg";
 
 const config: RoleLoginConfig = {
   role: "master",
-  apiEndpoint: "/auth/master/login",
   redirectTo: "/master/inicio",
   title: "Entrar",
   subtitle: "Use seu login e senha para acessar",

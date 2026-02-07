@@ -1,3 +1,5 @@
+import { Role } from "./auth";
+
 export interface Employee {
   NidFuncionario: string;
   NomFuncionario: string;
@@ -12,6 +14,7 @@ export interface Employee {
 }
 
 export interface EmployeesTableProps {
+  role: Role;
   employees: Employee[];
   currentPage: number;
   totalPages: number;
@@ -22,7 +25,9 @@ export interface EmployeesFilters {
   page?: number;
   limit?: number;
   nome?: string | null;
+  nidFuncionario?: string | null;
   empresa?: string | null;
+  nidEmpresa?: string | null;
   cpf?: string | null;
   status?: number | null;
 }

@@ -5,6 +5,7 @@ import { EmployeesTableProps } from "@/src/types/employee";
 import { useRouter } from "next/navigation";
 
 export default function EmployeesTable({
+  role,
   employees,
   currentPage,
   totalPages,
@@ -13,7 +14,7 @@ export default function EmployeesTable({
   const router = useRouter();
 
   function onOpenEmployee(nid: string) {
-    router.push(`/master/colaboradores/${nid}/exames`);
+    router.push(`/${role}/colaboradores/${nid}/exames`);
   }
 
   return (

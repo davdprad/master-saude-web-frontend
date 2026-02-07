@@ -22,9 +22,9 @@ export default function ExamsTable({
 
         {/* Lista de Colaboradores */}
         <div className="divide-y divide-gray-100">
-          {exams.map((exam) => (
+          {exams.map((exam, index) => (
             <div
-              key={exam.NidAnexo}
+              key={`${exam.NidAnexo}-${index}`}
               className="grid grid-cols-1 lg:grid-cols-5 gap-4 p-4 lg:px-6 lg:py-4 hover:bg-linear-to-r hover:from-indigo-50/50 hover:to-transparent transition-all duration-200 group"
             >
               {/* Nome - Mobile: destaque, Desktop: col-span-3 */}

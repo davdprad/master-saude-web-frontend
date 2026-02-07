@@ -2,27 +2,17 @@
 
 import { useState } from "react";
 import { Search, Users, UserCheck, UserX, Filter } from "lucide-react";
-
 import { StatsGrid } from "@/src/components/cards";
 import InputSearch from "@/src/components/ui/InputSearch";
 import SearchableSelect from "@/src/components/ui/SearchableSelect";
 import EmployeesTable from "@/src/components/tables/EmployeesTable";
 import { getCols } from "@/src/utils/gridUtils";
-
 import { STATUS_OPTIONS } from "@/src/features/employees/constants";
-import { useEmployees } from "@/src/features/employees/hooks/useEmployees";
-import { useCompanyOptions } from "@/src/features/employees/hooks/useCompanyOptions";
+import { useCompanyEmployees } from "./hooks/useCompanyEmployees";
 
-export default function EmployeesClient() {
+export default function EmployeesCompanyClient() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCompany, setSelectedCompany] = useState("");
-  const [companyQuery, setCompanyQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
-
-  const { optionsCompany } = useCompanyOptions({
-    companyQuery,
-    selectedCompany,
-  });
 
   const {
     employees,
@@ -33,7 +23,7 @@ export default function EmployeesClient() {
     currentPage,
     totalPages,
     setCurrentPage,
-  } = useEmployees({ searchTerm, selectedCompany, selectedStatus });
+  } = useCompanyEmployees({ searchTerm, selectedStatus });
 
   const statsCards = [
     {
@@ -70,16 +60,6 @@ export default function EmployeesClient() {
         />
 
         <SearchableSelect
-          value={selectedCompany}
-          onChange={setSelectedCompany}
-          setQuery={setCompanyQuery}
-          options={optionsCompany}
-          placeholder="Empresas"
-          icon={Filter}
-          debounceMs={500}
-        />
-
-        <SearchableSelect
           value={selectedStatus}
           onChange={setSelectedStatus}
           options={STATUS_OPTIONS}
@@ -96,7 +76,7 @@ export default function EmployeesClient() {
         }`}
       >
         <EmployeesTable
-          role="master"
+          role="convenio"
           employees={employees}
           currentPage={currentPage}
           totalPages={totalPages}
