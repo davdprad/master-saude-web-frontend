@@ -28,7 +28,7 @@ export default function DashboardPage() {
       icon: Users,
       number: 150,
       label: "Total Colaboradores",
-      color: "green",
+      color: "teal",
     },
     {
       icon: Building,

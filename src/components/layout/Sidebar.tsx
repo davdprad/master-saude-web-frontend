@@ -2,6 +2,7 @@ import { Role } from "@/src/types/role";
 import { sidebarConfig } from "@/src/config/sidebar.config";
 import Image from "next/image";
 import LogoMaster from "@/public/logo-master.svg";
+import LogoMasterWhite from "@/public/logo-master-white.svg";
 import NavButton from "../ui/NavButton";
 
 interface SidebarProps {
@@ -27,7 +28,7 @@ export default function Sidebar({ userRole, isOpen, onClose }: SidebarProps) {
       <aside
         className={`
           fixed lg:static
-          top-0 left-0 h-full bg-white shadow-xl z-40
+          top-0 left-0 h-full bg-slate-900 shadow-xl z-40
           transition-transform duration-300 ease-in-out
           w-64
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
@@ -35,25 +36,25 @@ export default function Sidebar({ userRole, isOpen, onClose }: SidebarProps) {
         `}
       >
         {/* Logo */}
-        <div className="p-7 border-b border-gray-200">
-          <div className="flex items-center">
-            <Image src={LogoMaster} alt="Logo" className="rounded-lg" />
-          </div>
+        <div className="p-8">
+          <Image src={LogoMasterWhite} alt="Logo" />
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-2">
-          {navItems.map((item, index) => {
-            return (
-              <NavButton
-                key={index}
-                href={item.href}
-                icon={item.icon}
-                label={item.label}
-              />
-            );
-          })}
-        </nav>
+        <div className="px-4">
+          <nav className="p-4 space-y-2 bg-white/10 rounded-2xl ring-1 ring-white/20">
+            {navItems.map((item, index) => {
+              return (
+                <NavButton
+                  key={index}
+                  href={item.href}
+                  icon={item.icon}
+                  label={item.label}
+                />
+              );
+            })}
+          </nav>
+        </div>
       </aside>
     </>
   );

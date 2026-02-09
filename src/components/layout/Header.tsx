@@ -15,8 +15,8 @@ export default function Header({ onSidebarClick }: HeaderProps) {
   const title = getPageTitle(pathname);
 
   return (
-    <header className="bg-white border-b border-gray-200 shadow-sm">
-      <div className="flex items-center justify-between px-4 py-3">
+    <header className="z-20 ring-1 ring-gray-200">
+      <div className="flex items-center justify-between px-4 lg:px-6 py-4">
         {/* Título da página / Breadcrumb */}
         {/* Botão menu mobile + Título */}
         <div className="flex items-center gap-4">
@@ -41,7 +41,7 @@ export default function Header({ onSidebarClick }: HeaderProps) {
         {/* Ações (direita) */}
         <div className="flex items-center gap-2 sm:gap-4">
           {/* Notificações */}
-          <NotificationsDropdown />
+          {/* <NotificationsDropdown /> */}
 
           {/* Perfil do usuário */}
           <UserDropdown />
