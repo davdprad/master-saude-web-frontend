@@ -5,10 +5,11 @@ import { backendApi } from "@/src/services-server/api";
 
 export async function POST(
   req: Request,
-  { params }: { params: Promise<{ role: Role }> },
+  { params }: { params: Promise<{ role: string }> },
 ) {
   const body = await req.json();
-  const { role } = await params;
+  const resolvedParams = await params;
+  const role = resolvedParams.role as Role;
 
   try {
     const { data } = await backendApi.post(`/auth/${role}/login`, body);
