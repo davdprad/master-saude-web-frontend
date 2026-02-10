@@ -12,36 +12,28 @@ export async function POST() {
     maxAge: 0,
   });
 
-  res.cookies.set("refresh_token", "", {
+  res.cookies.set("employee_id", "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    path: "/api/auth/refresh", // mesmo path que você usou ao setar
+    path: "/",
     maxAge: 0,
   });
 
-  res.cookies.set("employee_id", "", {
-    httpOnly: false,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30,
-  });
-
   res.cookies.set("company_id", "", {
-    httpOnly: false,
+    httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 30,
+    maxAge: 0,
   });
 
   res.cookies.set("role", "", {
-    httpOnly: false,
+    httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 30,
+    maxAge: 0,
   });
 
   return res;

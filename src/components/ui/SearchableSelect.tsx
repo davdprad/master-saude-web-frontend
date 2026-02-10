@@ -28,6 +28,8 @@ interface SearchableSelectProps {
    * @default 0
    */
   debounceMs?: number;
+
+  disabled?: boolean;
 }
 
 export default function SearchableSelect({
@@ -38,6 +40,7 @@ export default function SearchableSelect({
   placeholder = "Selecione...",
   icon: Icon,
   debounceMs = 0,
+  disabled = false,
 }: SearchableSelectProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -61,7 +64,10 @@ export default function SearchableSelect({
   }, []);
 
   return (
-    <div ref={ref} className="relative min-w-60">
+    <div
+      ref={ref}
+      className={`relative min-w-60 ${disabled ? "pointer-events-none" : ""}`}
+    >
       {/* Trigger */}
       <button
         type="button"
@@ -69,7 +75,7 @@ export default function SearchableSelect({
         className={`w-full flex items-center justify-between
                     ${Icon ? "pl-10" : "pl-4"}
                    px-4 py-2.5 rounded-xl
-                   border border-gray-200 bg-white
+                   border border-gray-200 ${disabled ? "bg-slate-100" : "bg-white"}
                    text-left
                    focus:outline-none focus:ring-2 focus:ring-indigo-500
                    transition`}

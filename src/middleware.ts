@@ -1,22 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-function decodeJwtPayload(token: string) {
-  try {
-    const payload = token.split(".")[1];
-    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
-    const json = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((c) => "%" + c.charCodeAt(0).toString(16).padStart(2, "0"))
-        .join(""),
-    );
-    return JSON.parse(json);
-  } catch {
-    return null;
-  }
-}
-
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const isMasterArea =
@@ -53,8 +37,7 @@ export function middleware(req: NextRequest) {
   }
 
   // (Opcional) bloquear role errada já no middleware
-  const payload = decodeJwtPayload(token);
-  const role = payload?.role;
+  const role = req.cookies.get("role")?.value;
 
   if (isMasterArea && role !== "master")
     return NextResponse.redirect(new URL("/master", req.url));

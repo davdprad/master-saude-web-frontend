@@ -15,13 +15,11 @@ export async function POST(
     const { data } = await backendApi.post(`/auth/${role}/login`, body);
 
     const res = NextResponse.json(
-      {
-        role: data.role,
-        company_id: data.company_id,
-        employee_id: data.employee_id,
-      },
+      { message: "Login realizado!" },
       { status: 200 },
     );
+
+    const expire = data.access_token_expire || 60 * 60 * 8;
 
     // Cookies HttpOnly (mais seguro)
     res.cookies.set("access_token", data.access_token, {
@@ -29,39 +27,31 @@ export async function POST(
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 15,
-    });
-
-    res.cookies.set("refresh_token", data.refresh_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/api/auth/refresh",
-      maxAge: 60 * 60 * 24 * 30,
+      maxAge: expire,
     });
 
     res.cookies.set("employee_id", String(data.employee_id ?? ""), {
-      httpOnly: false,
+      httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 30,
+      maxAge: expire,
     });
 
     res.cookies.set("company_id", String(data.company_id ?? ""), {
-      httpOnly: false,
+      httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 30,
+      maxAge: expire,
     });
 
     res.cookies.set("role", String(data.role ?? ""), {
-      httpOnly: false,
+      httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 30,
+      maxAge: expire,
     });
 
     return res;
