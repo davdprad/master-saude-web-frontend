@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { getCompanies } from "@/src/services/company";
-import { NewCompany } from "@/src/types/company";
+import { Company } from "@/src/types/company";
 import { ITEMS_PER_PAGE } from "@/src/features/companies/constants";
 import {
   mapCompaniesToUI,
@@ -18,7 +18,7 @@ export function useCompanies({
   searchTerm,
   selectedStatus,
 }: UseCompaniesParams) {
-  const [companies, setCompanies] = useState<NewCompany[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
 

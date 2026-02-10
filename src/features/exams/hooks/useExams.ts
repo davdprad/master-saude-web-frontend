@@ -35,8 +35,6 @@ export function useExams({ nidFuncionario }: UseExamsParams) {
       try {
         setLoading(true);
 
-        console.log(Number(nidFuncionario));
-
         const data = await getExams({
           nidFuncionario: Number(nidFuncionario),
         });

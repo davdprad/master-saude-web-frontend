@@ -1,9 +1,10 @@
-import { NewCompany } from "@/src/types/company";
+import { Company } from "@/src/types/company";
 
-export function mapCompaniesToUI(companies: any[]): NewCompany[] {
+export function mapCompaniesToUI(companies: any[]): Company[] {
   return companies.map((c) => ({
     NidEmpresa: String(c.NidEmpresa),
     DesEmpresa: c.DesEmpresa,
+    DesCNPJCEI: c.DesCNPJCEI,
     GraRisco: String(c.GraRisco),
     NidCNAE1: String(c.NidCNAE1),
     FlgSituacao: String(c.FlgSituacao),

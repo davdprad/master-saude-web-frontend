@@ -1,6 +1,3 @@
-import { MoreHorizontal } from "lucide-react";
-import { Button } from "../ui/Button";
-import { useEffect, useMemo, useState } from "react";
 import { Pagination } from "../ui/Pagination";
 import { CompaniesTableProps } from "@/src/types/company";
 
@@ -13,7 +10,7 @@ export default function CompaniesTable({
   return (
     <>
       {/* Tabela de Colaboradores */}
-      <div className="bg-indigo-700 ring-1 ring-indigo-100 rounded-2xl shadow-sm transition-shadow duration-300 overflow-hidden">
+      <div className="bg-indigo-700 ring-1 ring-indigo-100 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
         {/* Header da Tabela */}
         <div className="hidden lg:grid lg:grid-cols-12 gap-4 p-4 lg:px-5 lg:py-3 font-semibold text-sm text-white tracking-wider">
           <div className="col-span-4">Empresa</div>
@@ -40,6 +37,10 @@ export default function CompaniesTable({
                 <div className="min-w-0 flex-1">
                   <div className="lg:text-sm font-semibold text-slate-800 truncate">
                     {company.DesEmpresa}
+                    <br />
+                    <span className="text-xs font-normal text-slate-600">
+                      {company.DesCNPJCEI}
+                    </span>
                   </div>
                 </div>
               </div>

@@ -1,23 +1,7 @@
 export interface Company {
-  id: number;
-  name: string;
-  cnpj: string;
-  email: string;
-  phone: string;
-  employees: number;
-  status: string;
-}
-
-export interface CompaniesTableProps {
-  companies: NewCompany[];
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
-
-export interface NewCompany {
   NidEmpresa: string;
   DesEmpresa: string;
+  DesCNPJCEI: string;
   GraRisco: string;
   NidCNAE1: string;
   FlgSituacao: string;
@@ -25,6 +9,13 @@ export interface NewCompany {
   DesTelefone1: string;
   DesTelefone2: string;
   total_funcionarios: string;
+}
+
+export interface CompaniesTableProps {
+  companies: Company[];
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 export interface CompaniesFilters {
@@ -35,6 +26,6 @@ export interface CompaniesFilters {
 }
 
 export interface CompaniesResponse {
-  companies: NewCompany[];
+  companies: Company[];
   total: number;
 }

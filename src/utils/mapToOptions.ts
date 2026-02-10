@@ -1,7 +1,7 @@
-import { NewCompany } from "../types/company";
+import { Company } from "../types/company";
 import { SelectOption } from "../types/optionsSelect";
 
-export function mapCompaniesToOptions(companies: NewCompany[]): SelectOption[] {
+export function mapCompaniesToOptions(companies: Company[]): SelectOption[] {
   return [
     { label: "Todas as empresas", value: "" },
     ...companies.map((company) => ({
