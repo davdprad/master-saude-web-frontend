@@ -4,7 +4,7 @@ import { backendApi } from "@/src/services-server/api";
 
 export async function GET(
   req: Request,
-  { params }: { params: Promise<{ nid_anexo: number }> },
+  { params }: { params: Promise<{ nid_anexo: string }> },
 ) {
   const jar = await cookies();
   const access = jar.get("access_token")?.value;
