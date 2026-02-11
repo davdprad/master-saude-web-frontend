@@ -10,7 +10,7 @@ export default function ExamsTable({
   totalPages,
   onPageChange,
 }: ExamsTableProps) {
-  const { handleDownload, isDownloading } = useDownloadExame();
+  const { handleDownload } = useDownloadExame();
 
   return (
     <>
@@ -33,7 +33,7 @@ export default function ExamsTable({
               {/* Nome - Mobile: destaque, Desktop: col-span-3 */}
               <div className="lg:col-span-3 flex items-center gap-3">
                 <div className="w-8 h-8 bg-linear-to-br from-indigo-100 to-indigo-300 rounded-full flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
-                  <span className="text-indigo-600 font-bold text-sm">
+                  <span className="text-indigo-800 font-bold text-sm">
                     {exam.NomExame?.charAt(0)}
                   </span>
                 </div>

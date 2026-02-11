@@ -20,7 +20,7 @@ export default function EmployeesTable({
   return (
     <>
       {/* Tabela de Colaboradores */}
-      <div className="bg-indigo-700 ring-1 ring-indigo-100 rounded-2xl shadow-sm transition-shadow duration-300 overflow-hidden">
+      <div className="bg-indigo-700 ring-1 ring-indigo-100 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
         {/* Header da Tabela */}
         <div className="hidden lg:grid lg:grid-cols-15 gap-4 p-4 lg:px-5 lg:py-3 font-semibold text-sm text-white tracking-wider">
           <div className="col-span-3">Nome</div>

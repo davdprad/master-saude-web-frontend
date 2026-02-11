@@ -5,8 +5,9 @@ import { backendApi } from "@/src/services-server/api";
 export async function GET(req: Request) {
   const jar = await cookies();
 
-  const access = jar.get("access_token")?.value; // HttpOnly
-  const employeeId = jar.get("employee_id")?.value; // cookie público
+  const access = jar.get("access_token")?.value;
+
+  const employeeId = jar.get("employee_id")?.value;
 
   if (!access) {
     return NextResponse.json({ message: "Não autenticado" }, { status: 401 });

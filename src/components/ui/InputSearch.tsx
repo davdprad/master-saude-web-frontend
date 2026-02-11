@@ -60,7 +60,7 @@ export default function InputSearch({
           if (debounceMs <= 0) onChange(v);
         }}
         readOnly={readOnly}
-        className={`w-full pl-10 pr-4 py-2.5 ${readOnly ? "bg-slate-100 pointer-events-none" : "bg-white"} border border-gray-200 rounded-xl
+        className={`w-full pl-10 pr-4 py-2.5 ${readOnly ? "bg-white/80 pointer-events-none" : "bg-white"} ring-1 ring-black/5 rounded-xl
                    focus:outline-none focus:ring-2 focus:ring-indigo-500
                    focus:border-transparent transition-all`}
       />

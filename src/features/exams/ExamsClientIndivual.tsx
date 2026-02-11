@@ -16,16 +16,7 @@ export default function ExamsClientIndividual() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      {/* Cabeçalho */}
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
-        {/* <Button
-          icon={ArrowLeft}
-          label="Voltar"
-          onClick={() => router.back()}
-          className="w-fit bg-linear-to-br from-indigo-500 to-indigo-700 text-white text-sm px-3 py-2 gap-2 rounded-xl hover:bg-indigo-800 hover:text-white transition-all"
-        /> */}
-      </div>
-
+      
       {/* Barra de Filtros */}
       <div className="flex flex-col lg:flex-row gap-4">
         <InputSearch
