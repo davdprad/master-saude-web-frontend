@@ -8,8 +8,8 @@ export default function Instructions({
   accordions: AccordionProps[];
 }) {
   return (
-    <Card>
-      <div className="border-b border-gray-200 p-5 bg-linear-to-r from-indigo-50 to-blue-50">
+    <Card className="rounded-3xl">
+      <div className="border-b border-gray-200 p-5 bg-white">
         <h2 className="text-lg font-semibold text-slate-900">
           Instruções de Exames
         </h2>

@@ -11,6 +11,7 @@ import {
   Camera,
   Clock,
   ChevronRight,
+  User,
 } from "lucide-react";
 import { useState, useId } from "react";
 import QrScanner from "@/src/utils/qrScanner";
@@ -103,7 +104,7 @@ export default function ColabDashboardPage() {
       {/* Main */}
       <main className="space-y-6">
         {/* Cards: check-in / fila */}
-        {!inQueue ? (
+        {/* {!inQueue ? (
           <QrScannerCard
             handleSuccess={handleSuccess}
             handleError={handleError}
@@ -111,8 +112,46 @@ export default function ColabDashboardPage() {
           />
         ) : (
           <InQueueCard position={3} />
-        )}
+        )} */}
 
+        <Card className="p-7 rounded-3xl">
+          {/* Header */}
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="flex flex-col gap-3">
+                <div className="flex gap-4">
+                  <div className="h-12 w-12 rounded-2xl bg-indigo-600 grid place-items-center ring-1 ring-black/15 shadow-[0_0_10px_2px_rgba(99,102,241,0.4)]">
+                    <User className="text-white" />
+                  </div>
+                  <div>
+                    <p className="text-lg font-semibold text-slate-700">
+                      Portal Master Saúde
+                    </p>
+                    <p className="text-slate-700 text-sm">Acesso convênio</p>
+                  </div>
+                </div>
+
+                <div className="min-w-0">
+                  <h1 className="mt-1 text-2xl font-semibold text-slate-900 sm:text-3xl">
+                    Olá, seja bem-vindo(a)!
+                  </h1>
+                  <p className="mt-2 max-w-2xl text-sm  text-slate-700">
+                    Aqui você acompanha seus colaboradores e acessa o histórico
+                    de exames de forma rápida e organizada.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="flex mt-6 flex-col items-start justify-between gap-3 border-t border-gray-200 pt-6 sm:flex-row sm:items-center">
+            <p className="text-xs text-gray-600">
+              Dica: use o menu lateral para navegar entre os menus.
+            </p>
+          </div>
+        </Card>
+        
         <Instructions accordions={examsAccordions} />
       </main>
     </div>
