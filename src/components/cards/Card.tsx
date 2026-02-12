@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 export default function Card({
   children,
   className = "",
@@ -7,10 +9,10 @@ export default function Card({
 }) {
   return (
     <div
-      className={[
+      className={twMerge(
         "rounded-2xl border border-gray-200 bg-white hover:shadow-sm overflow-hidden",
         className,
-      ].join(" ")}
+      )}
     >
       {children}
     </div>

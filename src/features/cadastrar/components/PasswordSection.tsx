@@ -51,7 +51,7 @@ export function PasswordSection({
       <button
         type="button"
         onClick={onCopy}
-        className="mt-2 text-xs font-semibold text-indigo-600 transition-colors"
+        className="mt-2 text-xs font-semibold text-indigo-600 transition-colors hover:bg-indigo-50 p-1 rounded-lg"
       >
         Copiar senha para área de transferência
       </button>

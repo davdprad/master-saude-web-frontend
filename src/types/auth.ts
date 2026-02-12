@@ -18,6 +18,7 @@ export type RoleLoginConfig = {
 
 export type AuthSession = {
   role: Role;
+  username: string;
   company_id: number | null;
   employee_id: number | null;
 };

@@ -1,7 +1,11 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST() {
-  const res = NextResponse.json({ ok: true });
+  const jar = await cookies();
+  const role = jar.get("role")?.value;
+
+  const res = NextResponse.json({ ok: true, role: role });
 
   // apaga cookies (precisa bater path)
   res.cookies.set("access_token", "", {
@@ -30,6 +34,14 @@ export async function POST() {
 
   res.cookies.set("role", "", {
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
+
+  res.cookies.set("username", "", {
+    httpOnly: false,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",

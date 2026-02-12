@@ -27,7 +27,7 @@ export default function ExamsClient() {
           icon={ArrowLeft}
           label="Voltar"
           onClick={() => router.back()}
-          className="w-fit bg-linear-to-br from-indigo-500 to-indigo-700 text-white text-sm px-3 py-2 gap-2 rounded-xl hover:bg-indigo-800 hover:text-white transition-all"
+          className="w-fit bg-indigo-700 text-white ring-1 ring-black/15 text-sm px-3 py-2 gap-2 rounded-xl hover:bg-indigo-700 hover:text-white transition-all"
         />
       </div>
 

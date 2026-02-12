@@ -2,8 +2,8 @@ export interface Exam {
   NidAnexo: string;
   NomExame: string;
   DesAnexo: string;
-  DatASO: string | null;
-  DatValidade: string | null;
+  DesEmpresa: string;
+  DatProcedimento: string | null;
 }
 
 export interface ExamsTableProps {

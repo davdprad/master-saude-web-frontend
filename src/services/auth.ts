@@ -7,5 +7,6 @@ export async function postLogin(role: Role, payload: LoginPayload) {
 }
 
 export async function postLogout() {
-  await api.post("/auth/logout");
+  const res = await api.post(`/auth/logout`);
+  return `/${res?.data?.role}` || "/";
 }

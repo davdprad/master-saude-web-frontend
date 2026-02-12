@@ -1,7 +1,6 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import NotificationsDropdown from "../notifications/NotificationsDropdown";
 import UserDropdown from "./UserDropdown";
 import { Menu } from "lucide-react";
 import getPageTitle from "@/src/utils/getPageTitle";
@@ -40,9 +39,6 @@ export default function Header({ onSidebarClick }: HeaderProps) {
 
         {/* Ações (direita) */}
         <div className="flex items-center gap-2 sm:gap-4">
-          {/* Notificações */}
-          {/* <NotificationsDropdown /> */}
-
           {/* Perfil do usuário */}
           <UserDropdown />
         </div>

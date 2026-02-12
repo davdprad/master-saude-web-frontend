@@ -54,6 +54,14 @@ export async function POST(
       maxAge: expire,
     });
 
+    res.cookies.set("username", String(data.login ?? ""), {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: expire,
+    });
+
     return res;
   } catch (err) {
     const message = axios.isAxiosError(err)

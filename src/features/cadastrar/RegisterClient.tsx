@@ -14,38 +14,32 @@ import { SuccessCard } from "./components/SuccessCard";
 import { Button } from "@/src/components/ui/Button";
 
 export default function RegisterClient() {
+  const [selectedCompany, setSelectedCompany] = useState("");
+  const [selectedEmployee, setSelectedEmployee] = useState("");
+  const [companyQuery, setCompanyQuery] = useState("");
+  const [employeeQuery, setEmployeeQuery] = useState("");
+
   const {
     role,
     setRole,
     username,
     setUsername,
-
-    selectedCompany,
-    setSelectedCompany,
-    selectedEmployee,
-    setSelectedEmployee,
-
     nivelConvenio,
     setNivelConvenio,
-
     password,
     regeneratePassword,
-
     created,
     loading,
     errors,
-
     submit,
     copyPassword,
-  } = useCreateUserForm();
+  } = useCreateUserForm({ selectedEmployee, selectedCompany });
 
-  const [companyQuery, setCompanyQuery] = useState("");
   const { optionsCompany } = useCompanyOptions({
     companyQuery,
     selectedCompany,
   });
 
-  const [employeeQuery, setEmployeeQuery] = useState("");
   const { optionsEmployee } = useEmployeesOptions({
     employeeQuery,
     selectedEmployee,

@@ -5,7 +5,7 @@ export function mapExamsToUI(exams: any[]): Exam[] {
     NidAnexo: String(e.NidAnexo),
     NomExame: String(e.NomExame),
     DesAnexo: String(e.DesAnexo),
-    DatASO: e.DatASO,
-    DatValidade: e.DatValidade,
+    DesEmpresa: String(e.DesEmpresa),
+    DatProcedimento: String(e.DatProcedimento),
   }));
 }

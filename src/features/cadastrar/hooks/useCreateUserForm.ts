@@ -1,21 +1,26 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { ConvenioNivel, CreatedUser, Errors } from "../types";
 import { generatePassword } from "../utils/generatePassword";
 import { postCreateUser } from "@/src/services/createUser";
 import { CreateUserResponse } from "@/src/types/createUser";
 import { Role } from "@/src/types/auth";
+import { toast } from "sonner";
 
-export function useCreateUserForm() {
+type UseCreateUserParams = {
+  selectedEmployee: string;
+  selectedCompany: string;
+};
+
+export function useCreateUserForm({
+  selectedEmployee,
+  selectedCompany,
+}: UseCreateUserParams) {
   const [role, setRole] = useState<Role>("master");
 
   // inputs
   const [username, setUsername] = useState("");
-
-  // selects (feature)
-  const [selectedCompany, setSelectedCompany] = useState("");
-  const [selectedEmployee, setSelectedEmployee] = useState("");
 
   // convenio
   const [nivelConvenio, setNivelConvenio] = useState<ConvenioNivel>(1);
@@ -34,13 +39,7 @@ export function useCreateUserForm() {
     setPassword(generatePassword(8));
 
     if (role === "master") {
-      setSelectedCompany("");
-      setSelectedEmployee("");
       setNivelConvenio(1);
-    }
-
-    if (role === "convenio") {
-      setSelectedEmployee("");
     }
 
     if (role === "cliente") {
@@ -106,16 +105,9 @@ export function useCreateUserForm() {
   async function copyPassword(pwd: string) {
     try {
       await navigator.clipboard.writeText(pwd);
-      setCreated((prev) =>
-        prev
-          ? { ...prev, copied: true }
-          : { role, username, password: pwd, copied: true },
-      );
-      setTimeout(() => {
-        setCreated((prev) => (prev ? { ...prev, copied: false } : prev));
-      }, 1200);
+      toast.success("Senha copiada para a área de transferência!");
     } catch {
-      // ignora
+      toast.error("Não foi possível copiar. Copie manualmente.");
     }
   }
 
@@ -138,8 +130,6 @@ export function useCreateUserForm() {
     // setters
     setRole,
     setUsername,
-    setSelectedCompany,
-    setSelectedEmployee,
     setNivelConvenio,
 
     // actions

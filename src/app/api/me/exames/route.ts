@@ -6,13 +6,11 @@ export async function GET(req: Request) {
   const jar = await cookies();
 
   const access = jar.get("access_token")?.value;
-
-  const employeeId = jar.get("employee_id")?.value;
-
   if (!access) {
     return NextResponse.json({ message: "Não autenticado" }, { status: 401 });
   }
 
+  const employeeId = jar.get("employee_id")?.value;
   if (!employeeId) {
     return NextResponse.json({ message: "Sem employee_id" }, { status: 403 });
   }
