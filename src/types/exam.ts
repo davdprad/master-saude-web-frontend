@@ -13,12 +13,6 @@ export interface ExamsTableProps {
   onPageChange: (page: number) => void;
 }
 
-export interface EmployeeExamsTableProps {
-  exams: Exam[];
-  action?: () => void;
-  itemsPerPage?: number;
-}
-
 export interface ExamsFilters {
   nidFuncionario: number;
 }
