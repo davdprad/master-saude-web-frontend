@@ -25,29 +25,26 @@ export default function LoginTemplate({ config }: { config: RoleLoginConfig }) {
   }
 
   return (
-    <div className="min-h-dvh sm:min-h-screen bg-gray-50">
+    <div className="min-h-dvh sm:min-h-screen bg-linear-to-br from-indigo-600 to-indigo-800 lg:bg-none lg:bg-gray-50">
       <div className="min-h-dvh sm:min-h-screen grid grid-cols-1 lg:grid-cols-2">
         <LeftPanel config={config} />
 
-        <div className="flex items-center justify-center px-6">
-          <div className="w-full max-w-md">
-            <Card className="rounded-3xl shadow-sm p-8 sm:p-10 border-0 ring-1 ring-gray-200">
-              <div className="flex items-center lg:hidden">
-                <Image
-                  src={config.logos.dark}
-                  alt="Logo"
-                  className="rounded-lg h-12"
-                />
-              </div>
+        <div className="min-h-dvh lg:min-h-0 flex flex-col items-center justify-center">
+          <div className="lg:hidden flex items-center py-15">
+            <Image
+              src={config.logos.white}
+              alt="Logo"
+              className="rounded-lg h-15"
+            />
+          </div>
+          <div className="w-full max-w-md flex-1 lg:flex-none">
+            <Card className="h-full rounded-b-none rounded-t-3xl lg:rounded-3xl shadow-sm p-8 sm:p-10 border-0 ring-1 ring-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">
+                {config.title}
+              </h2>
+              <p className="mt-1 text-sm text-gray-500">{config.subtitle}</p>
 
-              <div className="mt-10 lg:mt-0">
-                <h2 className="text-xl font-semibold text-gray-900">
-                  {config.title}
-                </h2>
-                <p className="mt-1 text-sm text-gray-500">{config.subtitle}</p>
-              </div>
-
-              <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+              <form onSubmit={handleSubmit} className="mt-6 space-y-6">
                 <Input
                   label="Login"
                   type="text"
@@ -77,7 +74,7 @@ export default function LoginTemplate({ config }: { config: RoleLoginConfig }) {
                   type="submit"
                   label={loading ? "Entrando..." : "Entrar"}
                   disabled={loading}
-                  className="w-full bg-linear-to-br from-indigo-500 to-indigo-700 text-white text-sm px-4 py-3 gap-2 rounded-xl hover:bg-indigo-800 hover:text-white transition-all"
+                  className="w-full bg-indigo-600 text-white text-sm px-4 py-3 gap-2 rounded-xl hover:bg-indigo-700 hover:text-white transition-all"
                 />
               </form>
             </Card>

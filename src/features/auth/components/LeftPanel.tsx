@@ -9,7 +9,7 @@ export function LeftPanel({ config }: { config: RoleLoginConfig }) {
 
   return (
     <div className="relative hidden lg:flex overflow-hidden shadow-2xl">
-      <div className="absolute inset-0 bg-linear-to-br from-indigo-500 to-indigo-700" />
+      <div className="absolute inset-0 bg-linear-to-br from-indigo-600 to-indigo-800" />
 
       <div className="relative z-10 flex flex-col justify-between p-10 text-white">
         <Image
