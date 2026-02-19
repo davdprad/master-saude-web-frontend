@@ -1,36 +1,183 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Master Saude Web Frontend
 
-## Getting Started
+Frontend do portal **Master Saude**, desenvolvido com **Next.js (App Router)**, com acesso segmentado por perfil:
 
-First, run the development server:
+- `master`: gestão administrativa
+- `convenio`: gestão de colaboradores vinculados a empresa/convênio
+- `cliente`: visualizacao de exames proprios
+
+## Visão Geral
+
+A aplicação possui:
+
+- tela inicial de selecao de perfil (`/`)
+- fluxos de login separados por perfil (`/master`, `/convenio`, `/cliente`)
+- áreas autenticadas por perfil com layout comum (sidebar + header)
+- camada de API interna em `src/app/api/*` que atua como proxy para o backend
+- autenticação baseada em cookies (`access_token`, `role`, `employee_id`, `company_id`)
+
+## Stack Técnica
+
+- **Framework**: Next.js `16.1.1` (App Router)
+- **UI**: React `19`, Tailwind CSS `4`
+- **HTTP Client**: Axios
+- **Feedbacks**: Sonner (toasts)
+- **Ícones**: Lucide React / React Icons
+- **Linguagem**: TypeScript
+
+## Requisitos
+
+- Node.js 20+
+- npm 10+
+
+## Instalação
+
+```bash
+npm install
+```
+
+## Variáveis de Ambiente
+
+Crie um arquivo `.env.local` na raiz do projeto:
+
+```env
+API_URL=http://SEU_BACKEND
+```
+
+- `API_URL`: URL base do backend consumido pelas rotas server-side (`src/services-server/api.ts`).
+- Sem essa variavel o app falha ao iniciar (validacao em `src/config/env.ts`).
+
+## Executando o Projeto
+
+### Desenvolvimento
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Servidor em `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build de produção
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+### Lint
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run lint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `npm run dev`: sobe o Next em modo dev (`0.0.0.0`)
+- `npm run build`: gera build de produção
+- `npm run start`: inicia app em modo produção
+- `npm run lint`: executa ESLint
 
-## Deploy on Vercel
+## Rotas da Aplicação
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Publicas
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `/`: seleção de perfil
+- `/master`: login master
+- `/convenio`: login convenio
+- `/cliente`: login cliente
+
+### Protegidas por perfil
+
+- **Master**
+- `/master/inicio`
+- `/master/colaboradores`
+- `/master/colaboradores/[nid]/exames`
+- `/master/empresas`
+- `/master/cadastrar`
+- `/master/fila`
+
+- **Convênio**
+- `/convenio/inicio`
+- `/convenio/colaboradores`
+- `/convenio/colaboradores/[nid]/exames`
+
+- **Cliente**
+- `/cliente/inicio`
+- `/cliente/exames`
+
+## Autenticação e Autorização
+
+A proteção de rotas ocorre no `middleware` (`src/middleware.ts`):
+
+- valida presença de `access_token` para rotas protegidas
+- redireciona para login do perfil quando não autenticado
+- valida cookie `role` para impedir acesso cruzado entre perfis
+
+Cookies usados no fluxo:
+
+- `access_token` (HttpOnly)
+- `role` (HttpOnly)
+- `employee_id` (HttpOnly)
+- `company_id` (HttpOnly)
+- `username` (nao HttpOnly)
+
+## Arquitetura de API (BFF)
+
+O frontend **não chama o backend diretamente no client** para fluxos principais. O padrão é:
+
+1. Client chama `/api/*` local (Next Route Handler)
+2. Route Handler le cookies/autenticacao
+3. Route Handler encaminha para backend via `backendApi`
+
+Rotas internas relevantes (`src/app/api`):
+
+- `POST /api/auth/login/[role]`
+- `POST /api/auth/logout`
+- `POST /api/register/[role]`
+- `GET /api/empresas`
+- `GET /api/colaboradores`
+- `GET /api/empresas/funcionarios`
+- `GET /api/funcionario/[nidFuncionario]/exames`
+- `GET /api/me/exames`
+- `GET /api/exames/download/[nid_anexo]`
+
+## Organizacao de Pastas
+
+```text
+src/
+  app/
+    (auth)/              # telas de login por perfil
+    (system)/            # areas autenticadas
+    api/                 # route handlers (BFF/proxy)
+  components/
+    cards/               # cards e dashboards
+    layout/              # sidebar/header/wrapper
+    tables/              # tabelas de listagem
+    ui/                  # componentes base
+  config/
+    env.ts               # validacao de variaveis
+    sidebar.config.ts    # menu por perfil
+  features/
+    auth/
+    cadastrar/
+    companies/
+    employees/
+    exams/
+    roles/
+  services/              # chamadas client -> /api
+  services-server/       # chamadas server -> backend
+  types/
+  utils/
+```
+
+## Fluxos Principais
+
+- **Login**: usuário autentica por perfil e recebe cookies de sessão
+- **Gestao Master**: visualiza empresas, colaboradores e cadastro de usuários
+- **Gestao Convenio**: lista colaboradores da própria empresa e acessa exames
+- **Portal Cliente**: consulta e baixa exames próprios
+
+## Observações
+
+- O projeto usa Tailwind CSS v4 e estrutura modular por feature.
+- A home (`/`) funciona como gateway de escolha de perfil.
