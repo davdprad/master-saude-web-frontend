@@ -28,4 +28,6 @@ export interface CompaniesFilters {
 export interface CompaniesResponse {
   companies: Company[];
   total: number;
+  total_ativas?: number;
+  total_inativas?: number;
 }

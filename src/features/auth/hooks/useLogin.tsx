@@ -8,7 +8,7 @@ export function useLogin(role: Role) {
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  async function login(login: string, senha: string) {
+  async function login(login: string, senha: string, captchaToken: string | null) {
     setFormError(null);
 
     if (!login.trim() || !senha.trim()) {
@@ -16,14 +16,24 @@ export function useLogin(role: Role) {
       return { ok: false as const };
     }
 
+    if (!captchaToken) {
+      setFormError("Confirme que você não é um robô.");
+      return { ok: false as const };
+    }
+
     setLoading(true);
     try {
       const data: AuthSession = await postLogin(role, { login, senha });
       return { ok: true as const, data };
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const axiosLikeError = err as {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+
       const message =
-        err?.response?.data?.message ||
-        err?.message ||
+        axiosLikeError?.response?.data?.message ||
+        axiosLikeError?.message ||
         "Login ou senha inválidos.";
 
       setFormError(message);

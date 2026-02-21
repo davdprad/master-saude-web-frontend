@@ -1,4 +1,4 @@
-import { Home, Users, Building, FileText, Plus } from "lucide-react";
+import { Home, Users, Building, FileText, Plus, ShieldCheck } from "lucide-react";
 
 export const sidebarConfig = {
   MASTER: [
@@ -6,6 +6,7 @@ export const sidebarConfig = {
     { icon: Users, label: "Colaboradores", href: "/master/colaboradores" },
     { icon: Building, label: "Empresas", href: "/master/empresas" },
     { icon: Plus, label: "Cadastrar", href: "/master/cadastrar" },
+    { icon: ShieldCheck, label: "Acessos", href: "/master/acessos" },
   ],
   EMPLOYEE: [
     { icon: Home, label: "Início", href: "/cliente/inicio" },

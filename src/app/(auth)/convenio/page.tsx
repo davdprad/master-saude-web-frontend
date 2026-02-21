@@ -12,7 +12,7 @@ const config: RoleLoginConfig = {
   left: {
     productName: "Portal Master Saúde",
     tagline: "Acesso convênio",
-    welcomeTitle: "Olá, seja muito bem-vindo(a)!",
+    welcomeTitle: "Acesso ao painel do convênio",
     welcomeText:
       "Entre com suas credenciais para gerenciar colaboradores e exames.",
     icon: "handshake",

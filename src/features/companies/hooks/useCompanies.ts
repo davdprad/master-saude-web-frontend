@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { getCompanies } from "@/src/services/company";
 import { Company } from "@/src/types/company";
 import { ITEMS_PER_PAGE } from "@/src/features/companies/constants";
@@ -20,13 +20,13 @@ export function useCompanies({
 }: UseCompaniesParams) {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [total, setTotal] = useState(0);
+  const [totalAtivas, setTotalAtivas] = useState(0);
+  const [totalInativas, setTotalInativas] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = useMemo(() => {
-    return Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
-  }, [total]);
+  const totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
 
   useEffect(() => {
     setCurrentPage((prev) => Math.min(prev, totalPages));
@@ -50,11 +50,15 @@ export function useCompanies({
 
         setCompanies(mapCompaniesToUI(data.companies));
         setTotal(data.total);
+        setTotalAtivas(data.total_ativas ?? 0);
+        setTotalInativas(data.total_inativas ?? 0);
       } catch (err) {
         if (cancelled) return;
         console.error("Erro ao buscar empresas:", err);
         setCompanies([]);
         setTotal(0);
+        setTotalAtivas(0);
+        setTotalInativas(0);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -66,16 +70,6 @@ export function useCompanies({
       cancelled = true;
     };
   }, [searchTerm, selectedStatus, currentPage]);
-
-  const totalAtivas = useMemo(
-    () => companies.filter((c) => c.FlgSituacao === "1").length,
-    [companies],
-  );
-
-  const totalInativas = useMemo(
-    () => companies.filter((c) => c.FlgSituacao === "0").length,
-    [companies],
-  );
 
   return {
     companies,

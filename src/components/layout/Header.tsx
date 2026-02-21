@@ -12,6 +12,7 @@ interface HeaderProps {
 export default function Header({ onSidebarClick }: HeaderProps) {
   const pathname = usePathname();
   const title = getPageTitle(pathname);
+  const isInicioPage = pathname.endsWith("/inicio");
 
   return (
     <header className="z-20 ring-1 ring-gray-200">
@@ -31,9 +32,11 @@ export default function Header({ onSidebarClick }: HeaderProps) {
             <h2 className="text-xl lg:text-2xl font-bold text-gray-800">
               {title}
             </h2>
-            <p className="text-sm text-gray-500 hidden sm:block">
-              Olá, seja bem-vindo(a)!
-            </p>
+            {isInicioPage ? (
+              <p className="text-sm text-gray-500 hidden sm:block">
+                Olá, seja bem-vindo(a)!
+              </p>
+            ) : null}
           </div>
         </div>
 

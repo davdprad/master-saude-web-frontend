@@ -12,7 +12,7 @@ const config: RoleLoginConfig = {
   left: {
     productName: "Portal Master Saúde",
     tagline: "Acesso administrativo",
-    welcomeTitle: "Olá, seja muito bem-vindo(a)!",
+    welcomeTitle: "Acesso ao painel administrativo",
     welcomeText:
       "Entre com suas credenciais para gerenciar empresas, colaboradores e configurações do sistema de forma segura.",
     icon: "crown",

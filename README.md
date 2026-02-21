@@ -42,9 +42,11 @@ Crie um arquivo `.env.local` na raiz do projeto:
 
 ```env
 API_URL=http://SEU_BACKEND
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=SUA_SITE_KEY_RECAPTCHA
 ```
 
 - `API_URL`: URL base do backend consumido pelas rotas server-side (`src/services-server/api.ts`).
+- `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`: chave pública do Google reCAPTCHA v2 (checkbox “Não sou um robô”) usada na tela de login.
 - Sem essa variavel o app falha ao iniciar (validacao em `src/config/env.ts`).
 
 ## Executando o Projeto

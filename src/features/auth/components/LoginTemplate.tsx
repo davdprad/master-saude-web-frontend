@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import ReCAPTCHA from "react-google-recaptcha";
 import { Input } from "@/src/components/ui/Input";
 import Card from "@/src/components/cards/Card";
 import { Button } from "@/src/components/ui/Button";
@@ -13,15 +14,25 @@ import { RoleLoginConfig } from "@/src/types/auth";
 export default function LoginTemplate({ config }: { config: RoleLoginConfig }) {
   const router = useRouter();
   const { login: doLogin, loading, formError } = useLogin(config.role);
+  const recaptchaRef = useRef<ReCAPTCHA | null>(null);
+  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
 
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const result = await doLogin(login, password);
-    if (result.ok) router.push(config.redirectTo);
+    const result = await doLogin(login, password, captchaToken);
+
+    if (result.ok) {
+      router.push(config.redirectTo);
+      return;
+    }
+
+    recaptchaRef.current?.reset();
+    setCaptchaToken(null);
   }
 
   return (
@@ -63,6 +74,22 @@ export default function LoginTemplate({ config }: { config: RoleLoginConfig }) {
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={loading}
                 />
+
+                <div className="space-y-2">
+                  {recaptchaSiteKey ? (
+                    <ReCAPTCHA
+                      ref={recaptchaRef}
+                      sitekey={recaptchaSiteKey}
+                      onChange={(token) => setCaptchaToken(token)}
+                      onExpired={() => setCaptchaToken(null)}
+                      onErrored={() => setCaptchaToken(null)}
+                    />
+                  ) : (
+                    <div className="rounded-xl ring-1 ring-amber-100 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+                      Configure `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` no `.env.local`.
+                    </div>
+                  )}
+                </div>
 
                 {formError ? (
                   <div className="mt-4 rounded-xl ring-1 ring-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
