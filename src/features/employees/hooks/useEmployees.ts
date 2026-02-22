@@ -15,6 +15,40 @@ type UseEmployeesParams = {
   selectedStatus: string;
 };
 
+type EmployeesSnapshot = {
+  employees: Employee[];
+  total: number;
+  totalAtivos: number;
+  totalInativos: number;
+};
+
+type EmployeesCacheEntry = {
+  timestamp: number;
+  data: EmployeesSnapshot;
+};
+
+const EMPLOYEES_CACHE_TTL_MS = 60_000;
+const employeesCache = new Map<string, EmployeesCacheEntry>();
+
+function buildEmployeesCacheKey({
+  searchTerm,
+  selectedCompany,
+  selectedStatus,
+  currentPage,
+}: {
+  searchTerm: string;
+  selectedCompany: string;
+  selectedStatus: string;
+  currentPage: number;
+}) {
+  return JSON.stringify({
+    searchTerm,
+    selectedCompany,
+    selectedStatus,
+    currentPage,
+  });
+}
+
 export function useEmployees({
   searchTerm,
   selectedCompany,
@@ -43,8 +77,35 @@ export function useEmployees({
     let cancelled = false;
 
     async function load() {
+      const cacheKey = buildEmployeesCacheKey({
+        searchTerm,
+        selectedCompany,
+        selectedStatus,
+        currentPage,
+      });
+
+      const cachedEntry = employeesCache.get(cacheKey);
+      const hasCachedData = Boolean(cachedEntry);
+      const isFreshCache =
+        hasCachedData &&
+        Date.now() - (cachedEntry?.timestamp ?? 0) < EMPLOYEES_CACHE_TTL_MS;
+
+      if (cachedEntry?.data) {
+        setEmployees(cachedEntry.data.employees);
+        setTotal(cachedEntry.data.total);
+        setTotalAtivos(cachedEntry.data.totalAtivos);
+        setTotalInativos(cachedEntry.data.totalInativos);
+      }
+
+      if (isFreshCache) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        setLoading(true);
+        if (!hasCachedData) {
+          setLoading(true);
+        }
 
         const data = await getEmployees({
           page: currentPage,
@@ -56,19 +117,36 @@ export function useEmployees({
 
         if (cancelled) return;
 
-        setEmployees(mapEmployeesToUI(data.employees));
-        setTotal(data.total);
-        setTotalAtivos(data.total_ativos);
-        setTotalInativos(data.total_inativos);
+        const mappedData: EmployeesSnapshot = {
+          employees: mapEmployeesToUI(data.employees),
+          total: data.total,
+          totalAtivos: data.total_ativos,
+          totalInativos: data.total_inativos,
+        };
+
+        setEmployees(mappedData.employees);
+        setTotal(mappedData.total);
+        setTotalAtivos(mappedData.totalAtivos);
+        setTotalInativos(mappedData.totalInativos);
+
+        employeesCache.set(cacheKey, {
+          timestamp: Date.now(),
+          data: mappedData,
+        });
       } catch (err) {
         if (cancelled) return;
         console.error("Erro ao buscar colaboradores:", err);
-        setEmployees([]);
-        setTotal(0);
-        setTotalAtivos(0);
-        setTotalInativos(0);
+
+        if (!hasCachedData) {
+          setEmployees([]);
+          setTotal(0);
+          setTotalAtivos(0);
+          setTotalInativos(0);
+        }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled && !hasCachedData) {
+          setLoading(false);
+        }
       }
     }
 

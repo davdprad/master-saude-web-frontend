@@ -10,6 +10,19 @@ type UseExamsParams = {
   nidFuncionario: string;
 };
 
+type ExamsSnapshot = {
+  allExams: Exam[];
+  total: number;
+};
+
+type ExamsCacheEntry = {
+  timestamp: number;
+  data: ExamsSnapshot;
+};
+
+const EXAMS_CACHE_TTL_MS = 60_000;
+const examsCache = new Map<string, ExamsCacheEntry>();
+
 export function useExams({ nidFuncionario }: UseExamsParams) {
   const [allExams, setAllExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(false);
@@ -32,8 +45,27 @@ export function useExams({ nidFuncionario }: UseExamsParams) {
     let cancelled = false;
 
     async function load() {
+      const cacheKey = nidFuncionario;
+      const cachedEntry = examsCache.get(cacheKey);
+      const hasCachedData = Boolean(cachedEntry);
+      const isFreshCache =
+        hasCachedData &&
+        Date.now() - (cachedEntry?.timestamp ?? 0) < EXAMS_CACHE_TTL_MS;
+
+      if (cachedEntry?.data) {
+        setAllExams(cachedEntry.data.allExams);
+        setTotal(cachedEntry.data.total);
+      }
+
+      if (isFreshCache) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        setLoading(true);
+        if (!hasCachedData) {
+          setLoading(true);
+        }
 
         const data = await getExams({
           nidFuncionario: Number(nidFuncionario),
@@ -41,15 +73,30 @@ export function useExams({ nidFuncionario }: UseExamsParams) {
 
         if (cancelled) return;
 
-        setAllExams(mapExamsToUI(data));
-        setTotal(data.length);
+        const mappedData: ExamsSnapshot = {
+          allExams: mapExamsToUI(data),
+          total: data.length,
+        };
+
+        setAllExams(mappedData.allExams);
+        setTotal(mappedData.total);
+
+        examsCache.set(cacheKey, {
+          timestamp: Date.now(),
+          data: mappedData,
+        });
       } catch (err) {
         if (cancelled) return;
         console.error("Erro ao buscar exames:", err);
-        setAllExams([]);
-        setTotal(0);
+
+        if (!hasCachedData) {
+          setAllExams([]);
+          setTotal(0);
+        }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled && !hasCachedData) {
+          setLoading(false);
+        }
       }
     }
 
@@ -58,7 +105,7 @@ export function useExams({ nidFuncionario }: UseExamsParams) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [nidFuncionario]);
 
   const exams = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;

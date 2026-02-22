@@ -1,4 +1,5 @@
 import { LucideIcon } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 interface NavButtonProps {
@@ -13,8 +14,9 @@ export default function NavButton({ href, label, icon: Icon }: NavButtonProps) {
   const isActive = pathname === href;
 
   return (
-    <a
+    <Link
       href={href}
+      prefetch
       className={`
         ${
           isActive
@@ -26,6 +28,6 @@ export default function NavButton({ href, label, icon: Icon }: NavButtonProps) {
     >
       <Icon size={20} className="group-hover:scale-110 transition-transform" />
       <span className="font-medium">{label}</span>
-    </a>
+    </Link>
   );
 }
