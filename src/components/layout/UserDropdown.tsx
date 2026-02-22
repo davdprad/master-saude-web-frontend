@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, LogOut, User2 } from "lucide-react";
 import { postLogout } from "@/src/services/auth";
-import { useRouter } from "next/navigation";
 
 function getCookie(name: string) {
   if (typeof document === "undefined") return undefined;
@@ -16,8 +15,6 @@ function getCookie(name: string) {
 
 export default function UserDropdown() {
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const router = useRouter();
-
   const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
@@ -28,7 +25,7 @@ export default function UserDropdown() {
   async function handleLogout() {
     try {
       const path = await postLogout();
-      router.replace(path);
+      window.location.replace(path);
     } catch (err) {}
   }
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const isMasterArea =
@@ -10,18 +10,15 @@ export async function middleware(req: NextRequest) {
   const isClienteArea =
     pathname === "/cliente" || pathname.startsWith("/cliente/");
 
-  // Só aplica nas áreas
   if (!isMasterArea && !isConvenioArea && !isClienteArea)
     return NextResponse.next();
 
-  // Login (público): /master, /convenio, /cliente
   const isLoginPage =
     pathname === "/master" ||
     pathname === "/convenio" ||
     pathname === "/cliente";
   if (isLoginPage) return NextResponse.next();
 
-  // Daqui pra baixo: /master/*, /convenio/*, /cliente/* (protegido)
   const token = req.cookies.get("access_token")?.value;
 
   if (!token) {
@@ -32,11 +29,10 @@ export async function middleware(req: NextRequest) {
         : "/cliente";
     const url = req.nextUrl.clone();
     url.pathname = loginPath;
-    url.searchParams.set("next", pathname); // opcional: voltar após login
+    url.searchParams.set("next", pathname);
     return NextResponse.redirect(url);
   }
 
-  // (Opcional) bloquear role errada já no middleware
   const role = req.cookies.get("role")?.value;
 
   if (isMasterArea && role !== "master")
